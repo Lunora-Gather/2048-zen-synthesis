@@ -387,9 +387,8 @@ class Game2048 {
         
         tile.element.style.width = `calc(${widthFormula})`;
         tile.element.style.height = `calc(${widthFormula})`;
-        tile.element.style.top = '0';
-        tile.element.style.left = '0';
-        tile.element.style.transform = `translate3d(${leftCalc}, ${topCalc}, 0)`;
+        tile.element.style.left = leftCalc;
+        tile.element.style.top = topCalc;
     }
 
     handleMove(direction) {
