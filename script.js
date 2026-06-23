@@ -373,17 +373,15 @@ class Game2048 {
     }
 
     positionTile(tile) {
-        // Calculate offset percentage positioning dynamically to avoid complex layout calc
-        const leftPercent = (tile.col / this.size) * 100;
-        const topPercent = (tile.row / this.size) * 100;
-        
-        // Match CSS grid padding / spacing offsets
-        const paddingOffset = 14; 
+        // Match CSS grid padding (14px) and gap spacing offsets exactly
         const cellSpacing = this.size === 3 ? 14 : (this.size === 4 ? 12 : (this.size === 5 ? 10 : 8));
         
+        // Width of single grid cell: (100% - 2 * padding(14px) - (size - 1) * gap) / size
         const widthCalc = `calc((100% - 28px - ${(this.size - 1) * cellSpacing}px) / ${this.size})`;
-        const leftCalc = `calc(${leftPercent}% + ${paddingOffset}px - ${tile.col * (paddingOffset * 2 / this.size)}px + ${tile.col * cellSpacing}px)`;
-        const topCalc = `calc(${topPercent}% + ${paddingOffset}px - ${tile.row * (paddingOffset * 2 / this.size)}px + ${tile.row * cellSpacing}px)`;
+        
+        // Positioning: padding(14px) + index * (cell_width + gap)
+        const leftCalc = `calc(14px + ${tile.col} * (${widthCalc} + ${cellSpacing}px))`;
+        const topCalc = `calc(14px + ${tile.row} * (${widthCalc} + ${cellSpacing}px))`;
         
         tile.element.style.width = widthCalc;
         tile.element.style.height = widthCalc;
