@@ -373,15 +373,15 @@ class Game2048 {
     }
 
     positionTile(tile) {
-        // Match CSS grid padding (14px) and gap spacing offsets exactly
+        // Match CSS grid padding (dynamic via variable) and gap spacing offsets exactly
         const cellSpacing = this.size === 3 ? 14 : (this.size === 4 ? 12 : (this.size === 5 ? 10 : 8));
         
-        // Width of single grid cell: (100% - 2 * padding(14px) - (size - 1) * gap) / size
-        const widthCalc = `calc((100% - 28px - ${(this.size - 1) * cellSpacing}px) / ${this.size})`;
+        // Width of single grid cell: (100% - 2 * var(--board-padding) - (size - 1) * gap) / size
+        const widthCalc = `calc((100% - (var(--board-padding) * 2) - ${(this.size - 1) * cellSpacing}px) / ${this.size})`;
         
-        // Positioning: padding(14px) + index * (cell_width + gap)
-        const leftCalc = `calc(14px + ${tile.col} * (${widthCalc} + ${cellSpacing}px))`;
-        const topCalc = `calc(14px + ${tile.row} * (${widthCalc} + ${cellSpacing}px))`;
+        // Positioning: var(--board-padding) + index * (cell_width + gap)
+        const leftCalc = `calc(var(--board-padding) + ${tile.col} * (${widthCalc} + ${cellSpacing}px))`;
+        const topCalc = `calc(var(--board-padding) + ${tile.row} * (${widthCalc} + ${cellSpacing}px))`;
         
         tile.element.style.width = widthCalc;
         tile.element.style.height = widthCalc;
