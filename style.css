@@ -1589,46 +1589,7 @@ body:not(.dark-mode) .console-box {
     }
 }
 
-@media (min-width: 1200px) {
-    .zen-wrapper {
-        max-width: 1220px;
-        gap: 32px;
-    }
 
-    .drawer {
-        position: relative !important;
-        top: auto !important;
-        right: auto !important;
-        transform: translateX(0) !important;
-        width: 340px !important;
-        height: auto !important;
-        min-height: 100% !important;
-        border-left: 1px solid var(--card-border) !important;
-        border: 1px solid var(--card-border) !important;
-        border-radius: var(--border-radius-lg) !important;
-        box-shadow: var(--shadow-main) !important;
-        background: var(--card-bg) !important;
-        backdrop-filter: blur(40px) !important;
-        -webkit-backdrop-filter: blur(40px) !important;
-        z-index: 10 !important;
-    }
-
-    /* Hide drawer overlay triggers & close controls when sidebar is static */
-    #btn-achievements-trigger {
-        display: none !important;
-    }
-
-    .close-btn {
-        display: none !important;
-    }
-
-    /* Hide background backdrop modal */
-    .drawer-backdrop {
-        display: none !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-    }
-}
 
 /* ==========================================================================
    HEIGHT-RESPONSIVE COMPACT LAYOUTS (PREVENTS VERTICAL OVERFLOW)
