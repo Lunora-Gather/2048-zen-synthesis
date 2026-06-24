@@ -562,7 +562,32 @@ class Game2048 {
         }
 
         // Restart buttons (force fresh game and clear autosaved states, blurring target to return focus)
-        this.restartBtn.addEventListener('click', (e) => { this.newGame(true); this.sounds.playClick(); e.currentTarget.blur(); });
+        this.restartBtn.addEventListener('click', (e) => {
+            if (this.moves > 0 && !this.gameEnded) {
+                if (this.restartBtn.classList.contains('confirm-state')) {
+                    this.restartBtn.classList.remove('confirm-state');
+                    this.restartBtn.innerHTML = `<i class="fa-solid fa-rotate-right"></i> Restart Grid`;
+                    this.newGame(true);
+                    this.sounds.playClick();
+                } else {
+                    this.restartBtn.classList.add('confirm-state');
+                    this.restartBtn.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Confirm Restart?`;
+                    this.sounds.playClick();
+                    
+                    // Auto-revert after 3 seconds
+                    setTimeout(() => {
+                        if (this.restartBtn.classList.contains('confirm-state')) {
+                            this.restartBtn.classList.remove('confirm-state');
+                            this.restartBtn.innerHTML = `<i class="fa-solid fa-rotate-right"></i> Restart Grid`;
+                        }
+                    }, 3000);
+                }
+            } else {
+                this.newGame(true);
+                this.sounds.playClick();
+            }
+            e.currentTarget.blur();
+        });
         this.retryBtn.addEventListener('click', (e) => { this.newGame(true); this.sounds.playClick(); e.currentTarget.blur(); });
         this.winRestartBtn.addEventListener('click', (e) => { this.newGame(true); this.sounds.playClick(); e.currentTarget.blur(); });
 

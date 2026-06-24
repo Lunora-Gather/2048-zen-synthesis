@@ -25,6 +25,7 @@
     --bg:          #f2f4f7;
     --surface:     rgba(255, 255, 255, 0.72);
     --surface2:    rgba(240, 242, 245, 0.5);
+    --bg-dropdown: #ffffff;
     --border:      rgba(0, 0, 0, 0.05);
     --border-focus: rgba(99, 102, 241, 0.35);
 
@@ -46,7 +47,7 @@
     --glow-1:      rgba(99, 102, 241, 0.07);
     --glow-2:      rgba(244, 63, 94, 0.05);
 
-    --t: background .35s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease;
+    --t: background-color .35s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease;
 }
 
 /* ── DARK ── */
@@ -54,6 +55,7 @@ body.dark-mode {
     --bg:          #0a0c14;
     --surface:     rgba(24, 27, 43, 0.75);
     --surface2:    rgba(17, 19, 31, 0.55);
+    --bg-dropdown: #12151f;
     --border:      rgba(255, 255, 255, 0.05);
     --border-focus: rgba(99, 102, 241, 0.45);
 
@@ -438,7 +440,7 @@ body.dark-mode .toggle-thumb .dark-icon  { opacity: 1; transform: scale(1); }
     top: calc(100% + 5px);
     left: 0;
     width: 100%;
-    background: var(--surface);
+    background: var(--bg-dropdown, var(--surface));
     border: 1px solid var(--border);
     border-radius: var(--r-md);
     box-shadow: var(--shadow-lg);
@@ -849,6 +851,17 @@ body.dark-mode.theme-cyberpunk .tile[data-value="4"]  .tile-inner { background:#
 .btn-primary:hover {
     opacity: .88;
     box-shadow: 0 4px 14px rgba(var(--accent-rgb), .4);
+}
+
+/* Confirm reset button state warning */
+.btn.confirm-state {
+    background: rgba(239, 68, 68, 0.12) !important;
+    color: #ef4444 !important;
+    border-color: rgba(239, 68, 68, 0.35) !important;
+}
+.btn.confirm-state:hover {
+    background: rgba(239, 68, 68, 0.18) !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15) !important;
 }
 
 .flex-1 { flex: 1; }
