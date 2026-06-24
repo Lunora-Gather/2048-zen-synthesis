@@ -1442,6 +1442,13 @@ class ConstellationNetwork {
         this.shockwaves = [];
         this.mouse = { x: null, y: null };
         
+        // Accessibility (A11y): Honor user preferences for reduced motion
+        this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (this.reducedMotion) {
+            this.canvas.style.display = 'none';
+            return;
+        }
+        
         this.resize();
         this.initParticles();
         this.bindEvents();
