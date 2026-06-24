@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=12">
+    <link rel="stylesheet" href="style.css?v=28">
 </head>
 <body>
     <div class="zen-wrapper">
@@ -32,6 +32,11 @@
                                 <i class="fa-solid fa-sun light-icon"></i>
                             </div>
                         </div>
+                    </button>
+
+                    <!-- 音效切换 -->
+                    <button id="btn-sound-toggle" class="icon-btn" title="切换音效">
+                        <i class="fa-solid fa-volume-xmark"></i>
                     </button>
 
                     <!-- 手机端成就/日志抽屉触发按钮 -->
@@ -58,7 +63,6 @@
                 <div class="quick-settings">
                     <div class="select-pill">
                         <select id="grid-size">
-                            <option value="3">3 × 3</option>
                             <option value="4" selected>4 × 4</option>
                             <option value="5">5 × 5</option>
                             <option value="6">6 × 6</option>
@@ -182,6 +186,6 @@
     <!-- 背景遮罩层，仅移动端抽屉激活时显示 -->
     <div id="drawer-backdrop" class="drawer-backdrop"></div>
 
-    <script src="script.js?v=12"></script>
+    <script src="script.js?v=28"></script>
 </body>
 </html>

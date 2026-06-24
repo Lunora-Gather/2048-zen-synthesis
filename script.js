@@ -1,6 +1,169 @@
 /**
- * 2048: Zen Synthesis | Core Game Controller
+ * 2048: Zen Synthesis | Procedural Audio Synthesizer
  */
+class SoundEffects {
+    constructor() {
+        this.ctx = null;
+        this.muted = true;
+    }
+
+    init() {
+        if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    playClick() {
+        if (this.muted) return;
+        this.init();
+        const ctx = this.ctx;
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.type = 'sine';
+        const now = ctx.currentTime;
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(350, now + 0.05);
+
+        gain.gain.setValueAtTime(0.015, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+        osc.start(now);
+        osc.stop(now + 0.05);
+    }
+
+    playSlide() {
+        if (this.muted) return;
+        this.init();
+        const ctx = this.ctx;
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.type = 'sine';
+        const now = ctx.currentTime;
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.exponentialRampToValueAtTime(280, now + 0.08);
+
+        gain.gain.setValueAtTime(0.04, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+        osc.start(now);
+        osc.stop(now + 0.08);
+    }
+
+    playMerge(col = null, size = 4) {
+        if (this.muted) return;
+        this.init();
+        const ctx = this.ctx;
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const now = ctx.currentTime;
+        const frequencies = [261.63, 329.63, 392.00]; // C4, E4, G4 major chord for zen fusion
+        
+        // Calculate spatial stereo pan based on merge column
+        let panner = null;
+        if (col !== null && ctx.createStereoPanner) {
+            panner = ctx.createStereoPanner();
+            // Map col from 0..size-1 to a subtle pan range of -0.5..0.5
+            const panVal = ((col / (size - 1)) * 2 - 1) * 0.5;
+            panner.pan.setValueAtTime(panVal, now);
+            panner.connect(ctx.destination);
+        }
+
+        frequencies.forEach((freq, index) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+
+            osc.connect(filter);
+            filter.connect(gain);
+            
+            if (panner) {
+                gain.connect(panner);
+            } else {
+                gain.connect(ctx.destination);
+            }
+
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1200, now);
+            filter.frequency.exponentialRampToValueAtTime(250, now + 0.22);
+
+            gain.gain.setValueAtTime(0.0, now);
+            gain.gain.linearRampToValueAtTime(0.035, now + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+            osc.start(now);
+            osc.stop(now + 0.22);
+        });
+    }
+
+    playWin() {
+        if (this.muted) return;
+        this.init();
+        const ctx = this.ctx;
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const now = ctx.currentTime;
+        const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+        notes.forEach((freq, index) => {
+            const delay = index * 0.12;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+
+            gain.gain.setValueAtTime(0.0, now + delay);
+            gain.gain.linearRampToValueAtTime(0.035, now + delay + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.35);
+
+            osc.start(now + delay);
+            osc.stop(now + delay + 0.35);
+        });
+    }
+
+    playGameOver() {
+        if (this.muted) return;
+        this.init();
+        const ctx = this.ctx;
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const now = ctx.currentTime;
+        const notes = [196.00, 164.81, 130.81]; // G3, Eb3, C3
+        notes.forEach((freq, index) => {
+            const delay = index * 0.16;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+
+            gain.gain.setValueAtTime(0.0, now + delay);
+            gain.gain.linearRampToValueAtTime(0.035, now + delay + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.45);
+
+            osc.start(now + delay);
+            osc.stop(now + delay + 0.45);
+        });
+    }
+}
 
 // Representing a single Grid Tile element
 class Tile {
@@ -86,8 +249,10 @@ class Game2048 {
         this.touchStartY = 0;
 
         // Run initialization
+        this.sounds = new SoundEffects();
         this.loadSettings();
         this.setupThemes();
+        this.initCustomDropdowns();
         this.setupEventListeners();
         this.newGame();
     }
@@ -95,8 +260,8 @@ class Game2048 {
     loadSettings() {
         const savedSize = localStorage.getItem('2048-grid-size');
         if (savedSize) {
-            this.size = parseInt(savedSize);
-            this.gridSizeSelect.value = savedSize;
+            this.size = Math.max(4, parseInt(savedSize));
+            this.gridSizeSelect.value = this.size.toString();
         }
 
         const savedTheme = localStorage.getItem('2048-theme');
@@ -126,6 +291,15 @@ class Game2048 {
             }
         }
         this.updateMilestonesUI();
+
+        // Sound settings load
+        const savedSoundMuted = localStorage.getItem('2048-sound-muted');
+        if (savedSoundMuted !== null) {
+            this.sounds.muted = savedSoundMuted === 'true';
+        } else {
+            this.sounds.muted = true; // default to muted
+        }
+        this.updateSoundUI();
     }
 
     saveSettings() {
@@ -135,11 +309,109 @@ class Game2048 {
         localStorage.setItem(`2048-best-score-${this.size}`, this.bestScore);
     }
 
+    initCustomDropdowns() {
+        const selectPills = document.querySelectorAll('.select-pill');
+        selectPills.forEach(pill => {
+            const select = pill.querySelector('select');
+            if (!select) return;
+            
+            // Remove existing custom select if there is one (to allow hot resetting if needed)
+            const existingCustom = pill.querySelector('.custom-select');
+            if (existingCustom) existingCustom.remove();
+            
+            const customSelect = document.createElement('div');
+            customSelect.className = 'custom-select';
+            
+            const trigger = document.createElement('div');
+            trigger.className = 'custom-select-trigger';
+            
+            const triggerText = document.createElement('span');
+            const selectedOpt = select.options[select.selectedIndex];
+            triggerText.textContent = selectedOpt ? selectedOpt.textContent : '';
+            
+            const arrow = document.createElement('i');
+            arrow.className = 'fa-solid fa-chevron-down arrow';
+            
+            trigger.appendChild(triggerText);
+            trigger.appendChild(arrow);
+            customSelect.appendChild(trigger);
+            
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'custom-select-options';
+            
+            Array.from(select.options).forEach(opt => {
+                const optEl = document.createElement('div');
+                optEl.className = 'custom-select-option';
+                if (opt.value === select.value) {
+                    optEl.classList.add('selected');
+                }
+                optEl.textContent = opt.textContent;
+                optEl.setAttribute('data-value', opt.value);
+                
+                optEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    optionsContainer.querySelectorAll('.custom-select-option').forEach(el => el.classList.remove('selected'));
+                    optEl.classList.add('selected');
+                    
+                    triggerText.textContent = opt.textContent;
+                    
+                    select.value = opt.value;
+                    const event = new Event('change');
+                    select.dispatchEvent(event);
+                    
+                    customSelect.classList.remove('active');
+                    this.sounds.playClick();
+                });
+                
+                optionsContainer.appendChild(optEl);
+            });
+            
+            customSelect.appendChild(optionsContainer);
+            pill.appendChild(customSelect);
+            
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-select').forEach(el => {
+                    if (el !== customSelect) el.classList.remove('active');
+                });
+                customSelect.classList.toggle('active');
+                this.sounds.playClick();
+            });
+        });
+        
+        // Document-level click handler (only bind once if needed)
+        if (!window.customSelectClickBound) {
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('active'));
+            });
+            window.customSelectClickBound = true;
+        }
+    }
+
+    updateSoundUI() {
+        const soundBtn = document.getElementById('btn-sound-toggle');
+        if (soundBtn) {
+            const icon = soundBtn.querySelector('i');
+            if (this.sounds.muted) {
+                icon.className = 'fa-solid fa-volume-xmark';
+                soundBtn.classList.add('muted');
+            } else {
+                icon.className = 'fa-solid fa-volume-high';
+                soundBtn.classList.remove('muted');
+            }
+        }
+    }
+
     setupThemes() {
         if (this.boardElement.parentNode) {
             this.boardElement.parentNode.className = `board-frame size-${this.size}`;
         }
         this.boardElement.className = `matrix-board size-${this.size} theme-${this.theme}`;
+        
+        // Dynamic theme synchronization with document body
+        document.body.classList.remove('theme-cyberpunk', 'theme-classic', 'theme-pastel', 'theme-monochrome');
+        document.body.classList.add(`theme-${this.theme}`);
     }
 
     updateThemeModeUI() {
@@ -225,29 +497,49 @@ class Game2048 {
             this.updateThemeModeUI();
             this.saveSettings();
             this.addLog(`[SYSTEM] Interface shifted to [${this.isDarkMode ? 'DARK' : 'LIGHT'}] mode`, 'info');
+            this.sounds.playClick();
         });
 
-        // Mobile drawer handlers
-        this.drawerTriggerBtn.addEventListener('click', () => this.toggleDrawer(true));
-        this.drawerCloseBtn.addEventListener('click', () => this.toggleDrawer(false));
-        if (this.drawerBackdrop) {
-            this.drawerBackdrop.addEventListener('click', () => this.toggleDrawer(false));
+        // Sound Toggle Button
+        const soundBtn = document.getElementById('btn-sound-toggle');
+        if (soundBtn) {
+            soundBtn.addEventListener('click', () => {
+                this.sounds.muted = !this.sounds.muted;
+                localStorage.setItem('2048-sound-muted', this.sounds.muted);
+                this.updateSoundUI();
+                if (!this.sounds.muted) {
+                    this.sounds.playMerge();
+                    this.addLog('[SYSTEM] Neural audio feedback enabled.', 'success');
+                } else {
+                    this.addLog('[SYSTEM] Audio feedback silenced.', 'info');
+                }
+            });
         }
 
-        // Restart buttons
-        this.restartBtn.addEventListener('click', () => this.newGame());
-        this.retryBtn.addEventListener('click', () => this.newGame());
-        this.winRestartBtn.addEventListener('click', () => this.newGame());
+        // Mobile drawer handlers
+        this.drawerTriggerBtn.addEventListener('click', () => { this.toggleDrawer(true); this.sounds.playClick(); });
+        this.drawerCloseBtn.addEventListener('click', () => { this.toggleDrawer(false); this.sounds.playClick(); });
+        if (this.drawerBackdrop) {
+            this.drawerBackdrop.addEventListener('click', () => { this.toggleDrawer(false); this.sounds.playClick(); });
+        }
 
-        // Keep going button
-        this.keepGoingBtn.addEventListener('click', () => {
+        // Restart buttons (force fresh game and clear autosaved states, blurring target to return focus)
+        this.restartBtn.addEventListener('click', (e) => { this.newGame(true); this.sounds.playClick(); e.currentTarget.blur(); });
+        this.retryBtn.addEventListener('click', (e) => { this.newGame(true); this.sounds.playClick(); e.currentTarget.blur(); });
+        this.winRestartBtn.addEventListener('click', (e) => { this.newGame(true); this.sounds.playClick(); e.currentTarget.blur(); });
+
+        // Keep going button (persists infinity mode play preference immediately, blurring focus)
+        this.keepGoingBtn.addEventListener('click', (e) => {
             this.gameWinOverlay.classList.add('hidden');
             this.keepPlayingAfterWin = true;
             this.addLog('[SYSTEM] Zenith threshold extended. Playing infinity mode.', 'info');
+            this.saveGameState();
+            this.sounds.playClick();
+            e.currentTarget.blur();
         });
 
-        // Undo button
-        this.undoBtn.addEventListener('click', () => this.performUndo());
+        // Undo button (blurs focus so arrow keys are not high-jacked)
+        this.undoBtn.addEventListener('click', (e) => { this.performUndo(); this.sounds.playClick(); e.currentTarget.blur(); });
 
         // Touch swiping
         const touchContainer = this.boardElement;
@@ -285,7 +577,24 @@ class Game2048 {
         }, { passive: false });
     }
 
-    newGame() {
+    newGame(forceFresh = false) {
+        if (forceFresh) {
+            localStorage.removeItem(`2048-game-state-${this.size}`);
+        } else {
+            const savedStateStr = localStorage.getItem(`2048-game-state-${this.size}`);
+            if (savedStateStr) {
+                try {
+                    const state = JSON.parse(savedStateStr);
+                    if (state && state.grid) {
+                        this.restoreGameState(state);
+                        return;
+                    }
+                } catch (e) {
+                    console.error("Error loading saved game state", e);
+                }
+            }
+        }
+
         // Clear runtime state
         this.grid = Array(this.size).fill(null).map(() => Array(this.size).fill(null));
         this.score = 0;
@@ -315,7 +624,7 @@ class Game2048 {
         this.startTime = new Date();
         this.timeElement.textContent = '00:00';
         clearInterval(this.timerInterval);
-        this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+        this.timerInterval = null; // Do not start interval ticking until first move
 
         // Spawn first two tiles
         this.spawnTile();
@@ -324,6 +633,86 @@ class Game2048 {
         // Log initialization
         this.clearLogs();
         this.addLog(`[SYSTEM] Matrix initialized (${this.size}x${this.size}). Awaiting cycles...`, 'info');
+    }
+
+    saveGameState() {
+        const state = {
+            grid: this.cloneGridState(),
+            score: this.score,
+            moves: this.moves,
+            gameEnded: this.gameEnded,
+            gameWon: this.gameWon,
+            keepPlayingAfterWin: this.keepPlayingAfterWin,
+            elapsed: this.startTime ? (new Date() - this.startTime) : 0,
+            history: this.history
+        };
+        localStorage.setItem(`2048-game-state-${this.size}`, JSON.stringify(state));
+    }
+
+    restoreGameState(state) {
+        // Restore values
+        this.score = state.score;
+        this.scoreElement.textContent = this.score;
+        
+        this.moves = state.moves;
+        this.movesElement.textContent = this.moves;
+        
+        this.gameEnded = state.gameEnded ?? false;
+        this.gameWon = state.gameWon ?? false;
+        this.keepPlayingAfterWin = state.keepPlayingAfterWin ?? false;
+        
+        // History restoration
+        this.history = state.history ?? [];
+        this.updateUndoButton();
+        
+        // Clear Board DOM
+        this.boardElement.innerHTML = '';
+        this.tilesContainer.innerHTML = '';
+        this.createBoardGridCells();
+        
+        // Re-construct grid tiles from state clone
+        this.grid = Array(this.size).fill(null).map(() => Array(this.size).fill(null));
+        state.grid.forEach((row, r) => {
+            row.forEach((val, c) => {
+                if (val !== null) {
+                    const restoredTile = new Tile(r, c, val);
+                    this.grid[r][c] = restoredTile;
+                    this.renderTile(restoredTile);
+                }
+            });
+        });
+
+        this.updateMaxTileUI();
+        
+        // Sync overlays
+        if (this.gameEnded) {
+            if (this.gameWon && !this.keepPlayingAfterWin) {
+                this.gameWinOverlay.classList.remove('hidden');
+            } else {
+                this.gameOverOverlay.classList.remove('hidden');
+            }
+        } else {
+            this.gameOverOverlay.classList.add('hidden');
+            this.gameWinOverlay.classList.add('hidden');
+        }
+        
+        // Restore timer precisely
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+        
+        if (state.elapsed !== undefined) {
+            this.startTime = new Date(new Date().getTime() - state.elapsed);
+            this.updateTimer();
+            if (!this.gameEnded && this.moves > 0) {
+                this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+            }
+        } else {
+            this.startTime = new Date();
+            this.timeElement.textContent = '00:00';
+        }
+        
+        this.clearLogs();
+        this.addLog(`[SYSTEM] Loaded saved session (${this.size}x${this.size})`, 'info');
     }
 
     createBoardGridCells() {
@@ -375,20 +764,70 @@ class Game2048 {
     }
 
     positionTile(tile) {
-        // Match CSS grid padding (dynamic via variable) and gap spacing offsets exactly
-        const cellSpacing = this.size === 3 ? 14 : (this.size === 4 ? 12 : (this.size === 5 ? 10 : 8));
-        
-        // Width of single grid cell: (100% - 2 * var(--board-padding) - (size - 1) * gap) / size
-        const widthFormula = `((100% - (var(--board-padding) * 2) - ${(this.size - 1) * cellSpacing}px) / ${this.size})`;
-        
-        // Positioning: var(--board-padding) + index * (cell_width + gap)
-        const leftCalc = `calc(var(--board-padding) + ${tile.col} * (${widthFormula} + ${cellSpacing}px))`;
-        const topCalc = `calc(var(--board-padding) + ${tile.row} * (${widthFormula} + ${cellSpacing}px))`;
+        // Pure CSS-based responsive positioning: 100% robust against resizing, reflows, and layout timing issues
+        const gapVar = `var(--grid-gap-${this.size})`;
+        const widthFormula = `((var(--board-size) - (var(--board-padding) * 2) - (${gapVar} * ${this.size - 1})) / ${this.size})`;
+        const leftCalc = `calc(var(--board-padding) + ${tile.col} * (${widthFormula} + ${gapVar}))`;
+        const topCalc = `calc(var(--board-padding) + ${tile.row} * (${widthFormula} + ${gapVar}))`;
         
         tile.element.style.width = `calc(${widthFormula})`;
         tile.element.style.height = `calc(${widthFormula})`;
         tile.element.style.left = leftCalc;
         tile.element.style.top = topCalc;
+    }
+
+    spawnMergeParticles(row, col, value) {
+        const gapVar = `var(--grid-gap-${this.size})`;
+        const widthFormula = `((var(--board-size) - (var(--board-padding) * 2) - (${gapVar} * ${this.size - 1})) / ${this.size})`;
+        
+        // Find position of cell center
+        const leftCalc = `calc(var(--board-padding) + ${col} * (${widthFormula} + ${gapVar}) + ${widthFormula} / 2)`;
+        const topCalc = `calc(var(--board-padding) + ${row} * (${widthFormula} + ${gapVar}) + ${widthFormula} / 2)`;
+        
+        let color = 'var(--accent-color)';
+        if (this.theme === 'cyberpunk') {
+            const neonColors = {
+                2: '#06b6d4', 4: '#3b82f6', 8: '#a855f7', 16: '#ec4899', 
+                32: '#f43f5e', 64: '#eab308', 128: '#10b981', 
+                256: '#f97316', 512: '#84cc16', 1024: '#ef4444', 2048: '#f472b6'
+            };
+            color = neonColors[value] || '#f472b6';
+        } else if (this.theme === 'classic') {
+            color = '#ca8a04';
+        } else if (this.theme === 'pastel') {
+            const pastelColors = {
+                2: '#fecaca', 4: '#ffedd5', 8: '#fef9c3', 16: '#dcfce7',
+                32: '#cffafe', 64: '#dbeafe', 128: '#ede9fe', 256: '#fecdd3'
+            };
+            color = pastelColors[value] || 'var(--accent-color)';
+        }
+        
+        const particleCount = 8;
+        for (let i = 0; i < particleCount; i++) {
+            const p = document.createElement('div');
+            p.className = 'merge-particle';
+            p.style.left = leftCalc;
+            p.style.top = topCalc;
+            p.style.background = color;
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 30 + Math.random() * 45; // pixels
+            const dx = `${Math.cos(angle) * distance}px`;
+            const dy = `${Math.sin(angle) * distance}px`;
+            
+            p.style.setProperty('--dx', dx);
+            p.style.setProperty('--dy', dy);
+            
+            if (this.theme === 'cyberpunk') {
+                p.style.boxShadow = `0 0 8px ${color}`;
+            }
+            
+            this.tilesContainer.appendChild(p);
+            
+            setTimeout(() => {
+                if (p.parentNode) p.parentNode.removeChild(p);
+            }, 600);
+        }
     }
 
     handleMove(direction) {
@@ -398,9 +837,15 @@ class Game2048 {
         const gridBackup = this.cloneGridState();
         const scoreBackup = this.score;
         const movesBackup = this.moves;
+        const gameEndedBackup = this.gameEnded;
+        const gameWonBackup = this.gameWon;
+        const keepPlayingAfterWinBackup = this.keepPlayingAfterWin;
+        const elapsedBackup = this.startTime ? (new Date() - this.startTime) : 0;
 
         let moved = false;
         let mergeScore = 0;
+        let maxMergeCol = null;
+        let maxMergeVal = 0;
         const vector = this.getVector(direction);
         const traversals = this.getTraversals(vector);
 
@@ -442,6 +887,11 @@ class Game2048 {
                             this.score += mergedValue;
                             mergeScore += mergedValue;
 
+                            if (mergedValue > maxMergeVal) {
+                                maxMergeVal = mergedValue;
+                                maxMergeCol = nextCell.c;
+                            }
+
                             // Handle UI element fusion animation
                             const tileEl = tile.element;
                             tile.row = nextCell.r;
@@ -463,6 +913,9 @@ class Game2048 {
 
                             this.grid[currR][currC] = null;
                             moved = true;
+
+                            // Spawn explosion particles
+                            this.spawnMergeParticles(nextCell.r, nextCell.c, mergedValue);
 
                             // Achievement validations
                             this.checkAchievements(mergedValue);
@@ -490,6 +943,19 @@ class Game2048 {
         if (moved) {
             this.isMoving = true;
             
+            // Apply 3D Board Tilt
+            this.boardElement.classList.add(`tilt-${direction}`);
+            setTimeout(() => {
+                this.boardElement.classList.remove(`tilt-${direction}`);
+            }, 180);
+            
+            // Audio feedback with spatial channel panning matching merge column
+            if (mergeScore > 0) {
+                this.sounds.playMerge(maxMergeCol, this.size);
+            } else {
+                this.sounds.playSlide();
+            }
+            
             // Standard delay to align transition sliding animations
             setTimeout(() => {
                 this.isMoving = false;
@@ -504,7 +970,11 @@ class Game2048 {
             this.history.push({
                 grid: gridBackup,
                 score: scoreBackup,
-                moves: movesBackup
+                moves: movesBackup,
+                gameEnded: gameEndedBackup,
+                gameWon: gameWonBackup,
+                keepPlayingAfterWin: keepPlayingAfterWinBackup,
+                elapsed: elapsedBackup
             });
             if (this.history.length > this.maxUndoHistory) {
                 this.history.shift();
@@ -536,6 +1006,7 @@ class Game2048 {
             if (this.checkGameEnded()) {
                 this.endGame(false);
             }
+            this.saveGameState();
         } else {
             // Trigger board shake on invalid inputs
             this.boardElement.classList.add('board-shake');
@@ -704,6 +1175,16 @@ class Game2048 {
         
         this.moves = previousState.moves;
         this.movesElement.textContent = this.moves;
+
+        this.gameEnded = previousState.gameEnded ?? false;
+        this.gameWon = previousState.gameWon ?? false;
+        this.keepPlayingAfterWin = previousState.keepPlayingAfterWin ?? false;
+        
+        // Restore elapsed time precisely
+        if (previousState.elapsed !== undefined && this.startTime) {
+            this.startTime = new Date(new Date().getTime() - previousState.elapsed);
+            this.updateTimer();
+        }
         
         // Clear tiles
         this.tilesContainer.innerHTML = '';
@@ -723,11 +1204,21 @@ class Game2048 {
         this.updateMaxTileUI();
         this.updateUndoButton();
         
-        // Hide overlays if active
-        this.gameEnded = false;
-        this.gameOverOverlay.classList.add('hidden');
+        // Sync timer interval state
+        if (!this.gameEnded) {
+            this.gameOverOverlay.classList.add('hidden');
+            if (!this.timerInterval) {
+                this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+            }
+        }
+        if (!this.gameWon || this.keepPlayingAfterWin) {
+            this.gameWinOverlay.classList.add('hidden');
+        } else {
+            this.gameWinOverlay.classList.remove('hidden');
+        }
         
         this.addLog('[SYSTEM] Grid state rolled back to previous cycle.', 'info');
+        this.saveGameState();
     }
 
     cloneGridState() {
@@ -738,13 +1229,16 @@ class Game2048 {
 
     endGame(win) {
         clearInterval(this.timerInterval);
+        this.timerInterval = null;
         this.gameEnded = true;
 
         if (win) {
             this.gameWon = true;
+            this.sounds.playWin();
             this.gameWinOverlay.classList.remove('hidden');
             this.addLog('[SUCCESS] Zenith limit unlocked! Synthesis core complete.', 'success');
         } else {
+            this.sounds.playGameOver();
             this.gameOverOverlay.classList.remove('hidden');
             this.addLog('[FAILURE] Matrix capacity reached. Board Jammed.', 'danger');
         }
@@ -792,6 +1286,12 @@ class Game2048 {
         line.appendChild(contentNode);
         
         this.ledgerContainer.appendChild(line);
+        
+        // Enforce maximum size on ledger console box to prevent layout and memory degradation
+        while (this.ledgerContainer.children.length > 80) {
+            this.ledgerContainer.removeChild(this.ledgerContainer.firstChild);
+        }
+        
         this.ledgerContainer.scrollTop = this.ledgerContainer.scrollHeight;
     }
 
