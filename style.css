@@ -1197,7 +1197,7 @@ body.dark-mode .overlay { background: rgba(10,12,20,.8); }
         right: auto !important;
         transform: none !important;
         width: 300px !important;
-        height: 0 !important;
+        height: 100% !important;
         min-height: 0 !important;
         z-index: 10 !important;
         overflow: hidden !important;
