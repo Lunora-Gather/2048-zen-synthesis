@@ -136,6 +136,34 @@ class SoundEffects {
         });
     }
 
+    playAchievement() {
+        if (this.muted) return;
+        this.init();
+        const ctx = this.ctx;
+        if (ctx.state === 'suspended') ctx.resume();
+
+        const now = ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, index) => {
+            const delay = index * 0.08;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+
+            gain.gain.setValueAtTime(0.0, now + delay);
+            gain.gain.linearRampToValueAtTime(0.02, now + delay + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.25);
+
+            osc.start(now + delay);
+            osc.stop(now + delay + 0.25);
+        });
+    }
+
     playGameOver() {
         if (this.muted) return;
         this.init();
@@ -435,6 +463,16 @@ class Game2048 {
     setupEventListeners() {
         // Keyboard inputs
         window.addEventListener('keydown', (e) => {
+            // Check for U/u to trigger undo
+            if (e.key === 'u' || e.key === 'U') {
+                if (this.history.length > 0 && !this.isMoving) {
+                    e.preventDefault();
+                    this.performUndo();
+                    this.sounds.playClick();
+                }
+                return;
+            }
+
             if (this.isMoving || this.gameEnded || (this.gameWon && !this.keepPlayingAfterWin)) return;
 
             let direction = null;
@@ -830,6 +868,47 @@ class Game2048 {
         }
     }
 
+    spawnMilestoneConfetti(value) {
+        const colors = {
+            64: ['#f65e3b', '#eab308', '#f43f5e'],
+            512: ['#84cc16', '#10b981', '#06b6d4'],
+            2048: ['#f472b6', '#a855f7', '#3b82f6', '#ca8a04']
+        };
+        const activeColors = colors[value] || ['#6366f1', '#ec4899'];
+        
+        const count = 36;
+        for (let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            p.className = 'merge-particle milestone-confetti';
+            p.style.left = `calc(var(--board-size) / 2)`;
+            p.style.top = `calc(var(--board-size) / 2)`;
+            
+            const color = activeColors[Math.floor(Math.random() * activeColors.length)];
+            p.style.background = color;
+            if (this.theme === 'cyberpunk') {
+                p.style.boxShadow = `0 0 10px ${color}`;
+            }
+            
+            const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.2;
+            const distance = 80 + Math.random() * 120; // pixels
+            const dx = `${Math.cos(angle) * distance}px`;
+            const dy = `${Math.sin(angle) * distance}px`;
+            
+            p.style.setProperty('--dx', dx);
+            p.style.setProperty('--dy', dy);
+            
+            const size = 6 + Math.random() * 6;
+            p.style.width = `${size}px`;
+            p.style.height = `${size}px`;
+            
+            this.tilesContainer.appendChild(p);
+            
+            setTimeout(() => {
+                if (p.parentNode) p.parentNode.removeChild(p);
+            }, 800);
+        }
+    }
+
     handleMove(direction) {
         if (this.gameEnded || this.isMoving) return;
 
@@ -1125,6 +1204,15 @@ class Game2048 {
         localStorage.setItem('2048-milestones', JSON.stringify(this.unlockedMilestones));
         this.updateMilestonesUI();
         this.addLog(`[SUCCESS] Milestone Unlocked: [${name}]!`, 'success');
+        this.sounds.playAchievement();
+        
+        let val = 0;
+        if (key === 'tile64') val = 64;
+        if (key === 'tile512') val = 512;
+        if (key === 'tile2048') val = 2048;
+        if (val > 0) {
+            this.spawnMilestoneConfetti(val);
+        }
     }
 
     updateMilestonesUI() {
@@ -1161,7 +1249,13 @@ class Game2048 {
     }
 
     updateUndoButton() {
-        this.undoBtn.disabled = this.history.length === 0;
+        const count = this.history.length;
+        this.undoBtn.disabled = count === 0;
+        if (count > 0) {
+            this.undoBtn.innerHTML = `<i class="fa-solid fa-arrow-rotate-left"></i> Undo Step (${count})`;
+        } else {
+            this.undoBtn.innerHTML = `<i class="fa-solid fa-arrow-rotate-left"></i> Undo Step`;
+        }
     }
 
     performUndo() {

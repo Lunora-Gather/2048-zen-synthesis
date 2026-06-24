@@ -739,6 +739,16 @@ body.dark-mode.theme-cyberpunk .tile[data-value="4"]  .tile-inner { background:#
     100% { transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0); opacity:0; }
 }
 
+.merge-particle.milestone-confetti {
+    border-radius: 3px;
+    animation: confetti-burst 0.8s cubic-bezier(0.1, 1, 0.1, 1) forwards;
+}
+
+@keyframes confetti-burst {
+    0%   { transform: translate(-50%,-50%) scale(1) rotate(0deg); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0) rotate(270deg); opacity: 0; }
+}
+
 /* ==========================================================================
    STATS DECK
    ========================================================================== */
@@ -1023,10 +1033,17 @@ body.dark-mode .overlay { background: rgba(10,12,20,.8); }
     color: var(--text-2);
 }
 
+@keyframes achieve-pulse {
+    0% { box-shadow: 0 0 4px rgba(16,185,129, 0.15); }
+    50% { box-shadow: 0 0 12px rgba(16,185,129, 0.35); }
+    100% { box-shadow: 0 0 4px rgba(16,185,129, 0.15); }
+}
+
 .milestone-card.unlocked {
     opacity: 1;
     border: 1px solid rgba(16,185,129,.3);
     background: rgba(16,185,129,.05);
+    animation: achieve-pulse 3s infinite ease-in-out;
 }
 
 .milestone-card.unlocked i   { color: #10b981; }
