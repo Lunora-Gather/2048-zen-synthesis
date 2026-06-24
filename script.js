@@ -1021,6 +1021,16 @@ class Game2048 {
                             // Spawn explosion particles
                             this.spawnMergeParticles(nextCell.r, nextCell.c, mergedValue);
 
+                            // Trigger shockwave on background constellation canvas
+                            const cellIndex = nextCell.r * this.size + nextCell.c;
+                            const cellEl = this.boardElement.children[cellIndex];
+                            if (cellEl && window.bgConstellation) {
+                                const rect = cellEl.getBoundingClientRect();
+                                const centerX = rect.left + rect.width / 2;
+                                const centerY = rect.top + rect.height / 2;
+                                window.bgConstellation.triggerShockwave(centerX, centerY);
+                            }
+
                             // Achievement validations
                             this.checkAchievements(mergedValue);
                         }
@@ -1047,11 +1057,14 @@ class Game2048 {
         if (moved) {
             this.isMoving = true;
             
-            // Apply 3D Board Tilt
-            this.boardElement.classList.add(`tilt-${direction}`);
-            setTimeout(() => {
-                this.boardElement.classList.remove(`tilt-${direction}`);
-            }, 180);
+            // Apply 3D Board Tilt to the parent frame so background and tiles tilt in unison
+            const boardFrame = this.boardElement.parentNode;
+            if (boardFrame) {
+                boardFrame.classList.add(`tilt-${direction}`);
+                setTimeout(() => {
+                    boardFrame.classList.remove(`tilt-${direction}`);
+                }, 180);
+            }
             
             // Audio feedback with spatial channel panning matching merge column
             if (mergeScore > 0) {
@@ -1419,7 +1432,216 @@ class Game2048 {
     }
 }
 
-// Instantiate game instance on DOM loaded
+// Background Constellation Particle Engine
+class ConstellationNetwork {
+    constructor() {
+        this.canvas = document.getElementById('bg-canvas');
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.shockwaves = [];
+        this.mouse = { x: null, y: null };
+        
+        this.resize();
+        this.initParticles();
+        this.bindEvents();
+        this.animate();
+    }
+
+    resize() {
+        this.width = this.canvas.width = window.innerWidth;
+        this.height = this.canvas.height = window.innerHeight;
+        // Adjust particle count dynamically based on screen size
+        const area = this.width * this.height;
+        this.maxParticles = Math.min(120, Math.max(25, Math.floor(area / 15000)));
+        
+        if (this.particles.length === 0) {
+            this.initParticles();
+        } else {
+            if (this.particles.length > this.maxParticles) {
+                this.particles.length = this.maxParticles;
+            } else {
+                while (this.particles.length < this.maxParticles) {
+                    this.particles.push(this.createParticle());
+                }
+            }
+        }
+    }
+
+    createParticle() {
+        return {
+            x: Math.random() * this.width,
+            y: Math.random() * this.height,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            radius: 1 + Math.random() * 2,
+            baseRadius: 1 + Math.random() * 2
+        };
+    }
+
+    initParticles() {
+        this.particles = [];
+        for (let i = 0; i < this.maxParticles; i++) {
+            this.particles.push(this.createParticle());
+        }
+    }
+
+    bindEvents() {
+        window.addEventListener('resize', () => this.resize());
+        
+        window.addEventListener('mousemove', (e) => {
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            this.mouse.x = null;
+            this.mouse.y = null;
+        });
+        
+        // Touch events for mobile hover repel
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                this.mouse.x = e.touches[0].clientX;
+                this.mouse.y = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchend', () => {
+            this.mouse.x = null;
+            this.mouse.y = null;
+        }, { passive: true });
+    }
+
+    triggerShockwave(x, y) {
+        this.shockwaves.push({
+            x: x,
+            y: y,
+            radius: 0,
+            maxRadius: Math.min(window.innerWidth, window.innerHeight) * 0.35 || 250,
+            speed: 5,
+            alpha: 1.0,
+            intensity: 10
+        });
+    }
+
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        
+        // Clear canvas
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        // Throttled reading of theme colors (once every 30 frames) to prevent layout recalculations
+        if (!this.frameCount) this.frameCount = 0;
+        this.frameCount++;
+        if (this.frameCount % 30 === 0 || !this.accentRgb) {
+            let defaultAccent = '168, 85, 247';
+            const computedStyle = getComputedStyle(document.body);
+            const rgbVal = computedStyle.getPropertyValue('--accent-rgb');
+            this.accentRgb = rgbVal ? rgbVal.trim() : defaultAccent;
+        }
+        const accentRgb = this.accentRgb;
+
+        // Update shockwaves
+        for (let i = this.shockwaves.length - 1; i >= 0; i--) {
+            const sw = this.shockwaves[i];
+            sw.radius += sw.speed;
+            sw.alpha = 1 - (sw.radius / sw.maxRadius);
+            
+            if (sw.radius >= sw.maxRadius) {
+                this.shockwaves.splice(i, 1);
+            }
+        }
+        
+        const repelRadius = 130;
+        const waveWidth = 50;
+
+        // Update & Draw particles
+        this.particles.forEach((p) => {
+            // Apply velocity drift
+            p.x += p.vx;
+            p.y += p.vy;
+            
+            // Boundary bouncing
+            if (p.x < 0 || p.x > this.width) p.vx *= -1;
+            if (p.y < 0 || p.y > this.height) p.vy *= -1;
+            
+            // Mouse Repulsion
+            if (this.mouse.x !== null && this.mouse.y !== null) {
+                const dx = p.x - this.mouse.x;
+                const dy = p.y - this.mouse.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < repelRadius) {
+                    const force = (repelRadius - dist) / repelRadius;
+                    const push = force * 2.2;
+                    const angle = Math.atan2(dy, dx);
+                    p.x += Math.cos(angle) * push;
+                    p.y += Math.sin(angle) * push;
+                }
+            }
+
+            // Shockwave dispersion push
+            this.shockwaves.forEach(sw => {
+                const dx = p.x - sw.x;
+                const dy = p.y - sw.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                const diff = Math.abs(dist - sw.radius);
+                if (diff < waveWidth) {
+                    const force = (1 - diff / waveWidth) * sw.alpha * sw.intensity;
+                    const angle = Math.atan2(dy, dx);
+                    p.x += Math.cos(angle) * force;
+                    p.y += Math.sin(angle) * force;
+                }
+            });
+
+            // Re-constrain back into screen bound gracefully if pushed out
+            if (p.x < 0) p.x = 0;
+            if (p.x > this.width) p.x = this.width;
+            if (p.y < 0) p.y = 0;
+            if (p.y > this.height) p.y = this.height;
+
+            // Draw particle
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(${accentRgb}, 0.35)`;
+            this.ctx.fill();
+        });
+
+        // Draw connections (constellation lines)
+        const connectionLimit = 115;
+        this.ctx.lineWidth = 0.8;
+        for (let i = 0; i < this.particles.length; i++) {
+            for (let j = i + 1; j < this.particles.length; j++) {
+                const p1 = this.particles[i];
+                const p2 = this.particles[j];
+                const dx = p1.x - p2.x;
+                const dy = p1.y - p2.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                if (dist < connectionLimit) {
+                    const alpha = (1 - dist / connectionLimit) * 0.12;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(p1.x, p1.y);
+                    this.ctx.lineTo(p2.x, p2.y);
+                    this.ctx.strokeStyle = `rgba(${accentRgb}, ${alpha})`;
+                    this.ctx.stroke();
+                }
+            }
+        }
+
+        // Draw shockwave visual glowing front rings
+        this.shockwaves.forEach(sw => {
+            this.ctx.beginPath();
+            this.ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+            this.ctx.strokeStyle = `rgba(${accentRgb}, ${sw.alpha * 0.25})`;
+            this.ctx.lineWidth = 2.5 * sw.alpha;
+            this.ctx.stroke();
+        });
+    }
+}
+
+// Instantiate game instance and constellation on DOM loaded
 window.addEventListener('DOMContentLoaded', () => {
+    window.bgConstellation = new ConstellationNetwork();
     window.game2048 = new Game2048();
 });
