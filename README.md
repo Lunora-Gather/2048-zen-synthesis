@@ -1,70 +1,60 @@
-# 2048: Zen Synthesis 🌌
+# 2048
 
-> **A premium, high-fidelity responsive 2048 synthesis experience designed with modern aesthetics, interactive physical feedback, and a dynamic ambient soundscape.**
->
-> 🌌 **Live Demo:** [https://lunora-gather.github.io/2048/](https://lunora-gather.github.io/2048/)
+一个可以直接在浏览器中游玩的 2048 小游戏。
 
----
-
-## 🎮 Play Now / 在线游玩
-
-打开 GitHub Pages：
+在线地址：
 
 ```text
 https://lunora-gather.github.io/2048/
 ```
 
-这是一个纯静态网页游戏，不需要后端，也不需要构建步骤。
+---
+
+## 项目介绍
+
+这是一个使用 HTML、CSS 和 JavaScript 编写的网页版 2048 游戏。项目不需要后端，也不需要复杂的构建步骤，打开网页即可游玩。
+
+游戏目标很简单：通过上下左右移动方块，让相同数字的方块合并，尽量合成更大的数字，最终挑战 2048。
 
 ---
 
-## 🎨 Masterpiece Aesthetics & Interactions / 核心亮点
+## 功能说明
 
-This edition of 2048 goes far beyond the classic color grids, elevating the play session into a responsive Zen synthesis controller.
-
-### 🌌 Liquid Aurora Vignette / 液态极光背景
-
-The page background uses layered radial glows, subtle noise, and a canvas constellation field to create an ambient synthesis lab feeling.
-
-### 🧠 Contextual Color Synchronization / 网页情绪发光同步
-
-The theme glow, logo, board atmosphere, and milestone feedback react to the current play state and tile progression.
-
-### 🕸️ Interactive Constellation Particle Network / 背景星座神经网络
-
-A floating canvas network sits behind the game. It reacts to mouse movement and merge events with subtle spatial feedback.
-
-### ⚡ 3D Physics Board Tilt & Glassmorphism Tiles / 棋盘物理反馈与毛玻璃棋子
-
-Directional moves produce responsive board feedback, while tiles use modern glassmorphism, layered shadows, and motion cues.
-
-### 🎹 Web Audio API Haptic Synthesizer / Web Audio 合成音效
-
-The game generates sound directly through Web Audio API oscillators and filters, with selectable synth presets.
-
-### 🏆 Achievements & Activity Ledger / 成就与操作日志
-
-The side ledger tracks milestones and recent synthesis activity, with a mobile drawer layout for smaller screens.
+- 支持 4 × 4、5 × 5、6 × 6 棋盘；
+- 支持键盘方向键操作；
+- 支持手机触屏滑动操作；
+- 支持重新开始游戏；
+- 支持撤销上一步；
+- 自动保存当前游戏进度；
+- 记录当前分数和最高分；
+- 支持浅色 / 深色显示模式；
+- 支持音效开关；
+- 支持成就记录和操作日志；
+- 页面适配电脑和手机屏幕。
 
 ---
 
-## 🕹️ Controls / 操作方式
+## 操作方式
 
-| Action | Keyboard / Touch |
+| 操作 | 方法 |
 | --- | --- |
-| Move tiles | Arrow keys / Swipe |
-| Restart | Restart Grid button |
-| Undo | Undo Step button |
-| Change grid size | 4 × 4 / 5 × 5 / 6 × 6 selector |
-| Theme | Theme selector |
-| Sound | Sound toggle and synth selector |
-| Achievements | Award button / side drawer |
+| 向上移动 | 方向键 ↑ / 向上滑动 |
+| 向下移动 | 方向键 ↓ / 向下滑动 |
+| 向左移动 | 方向键 ← / 向左滑动 |
+| 向右移动 | 方向键 → / 向右滑动 |
+| 重新开始 | 点击 Restart Grid |
+| 撤销一步 | 点击 Undo Step |
+| 切换棋盘大小 | 使用 4 × 4 / 5 × 5 / 6 × 6 选择框 |
+| 切换主题 | 使用主题选择框 |
+| 开关音效 | 点击音量按钮 |
 
 ---
 
-## 🖥️ Local Running Guide / 本地运行指南
+## 本地运行
 
-This project runs on standard static web technologies with zero build configuration.
+这个项目是纯静态网页项目，可以直接打开 `index.html`，也可以用本地服务器运行。
+
+推荐使用本地服务器：
 
 ```bash
 git clone https://github.com/Lunora-Gather/2048.git
@@ -72,51 +62,56 @@ cd 2048
 npx -y http-server -p 8080 -c-1
 ```
 
-Then open:
+然后在浏览器中打开：
 
 ```text
 http://localhost:8080
 ```
 
-You can also open `index.html` directly in a browser, but a local server is recommended for consistent asset behavior.
-
 ---
 
-## 🚀 GitHub Pages Deployment / 部署说明
+## 部署说明
 
-The repository includes `.github/workflows/pages.yml`.
+当前仓库使用 GitHub Pages 部署。
 
-When `main` receives a push, GitHub Actions uploads the static site and deploys it to:
+推送到 `main` 分支后，GitHub Pages 会自动发布到：
 
 ```text
 https://lunora-gather.github.io/2048/
 ```
 
-Manual deployment is also available from **Actions → pages-build-deployment → Run workflow**.
+如果页面没有立刻更新，可以等待 Actions 执行完成后强制刷新浏览器缓存。
 
 ---
 
-## 🛠️ Technology Stack / 技术栈
-
-- **Core Logic:** Vanilla JavaScript
-- **Rendering:** HTML5 Canvas background effects + DOM-based 2048 board
-- **Styling:** CSS variables, responsive layout, glassmorphism, 3D transforms
-- **Audio:** Web Audio API procedural synth effects
-- **Deployment:** GitHub Actions + GitHub Pages static hosting
-
----
-
-## 📁 Project Files / 项目文件
+## 项目文件
 
 ```text
 .
-├── .github/workflows/pages.yml   # GitHub Pages static deployment
-├── index.html                    # Static page entry
-├── style.css                     # Visual system and responsive layout
-├── script.js                     # Game logic, sound, canvas effects
-└── README.md                     # Project documentation
+├── .nojekyll              # GitHub Pages 静态发布标记
+├── index.html             # 页面结构
+├── style.css              # 主要样式
+├── optimizations.css      # 布局、可访问性和体验优化样式
+├── script.js              # 游戏逻辑
+├── optimizations.js       # 运行时体验优化
+├── OPTIMIZATION_REPORT.md # 优化说明
+└── README.md              # 项目说明
 ```
 
 ---
 
-> Designed & Developed with 🤍 by **Antigravity**.
+## 技术栈
+
+- HTML
+- CSS
+- JavaScript
+- GitHub Pages
+
+---
+
+## 后续可优化方向
+
+- 继续优化手机端布局；
+- 增加更多清晰的提示文案；
+- 拆分 `script.js`，让代码结构更清楚；
+- 增加基础测试，验证移动和合并规则。
