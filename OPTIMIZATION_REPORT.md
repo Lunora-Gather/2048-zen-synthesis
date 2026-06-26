@@ -45,6 +45,7 @@ Not completed automatically:
 - Added labels for select controls.
 - Added keyboard support and focus styles for custom dropdown triggers.
 - Added Escape-key handling for closing the drawer/overlays.
+- Added early-loading `.sr-only` and focus-visible styles through `optimizations.css` to avoid first-paint label flicker.
 
 ### 3. Runtime performance and resilience
 
@@ -52,7 +53,8 @@ Not completed automatically:
 - Added a visibility-aware canvas optimization so the background skips drawing while the page is hidden.
 - Added page-hide save protection for active games.
 - Added theme-color synchronization with the current accent theme.
-- Kept changes non-invasive by layering `optimizations.js` after the original `script.js`.
+- Kept logic changes non-invasive by layering `optimizations.js` after the original `script.js`.
+- Kept first-paint user preference handling in CSS with `optimizations.css`.
 
 ## Recommended Follow-ups
 
