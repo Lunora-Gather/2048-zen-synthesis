@@ -70,6 +70,12 @@ Not completed automatically:
 - `optimizations.css`
 - `optimizations.js`
 
+## Validation Status
+
+- Static file references were checked on the PR branch.
+- No automated build/test pipeline is present in the repository.
+- Browser play-testing should still be done after merge because this is a visual static game.
+
 ## Recommended Follow-ups
 
 1. Rename the repository slug to `2024` in GitHub settings.
