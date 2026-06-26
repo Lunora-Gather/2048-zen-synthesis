@@ -1,0 +1,317 @@
+/* Mobile-only responsive polish. Desktop layout is intentionally untouched. */
+@media (max-width: 899px) {
+    :root {
+        --mobile-safe-x: clamp(10px, 3.2vw, 18px);
+        --mobile-gap: clamp(8px, 1.35dvh, 12px);
+        --mobile-board-limit: calc(100vw - (var(--mobile-safe-x) * 2));
+        --board-size: min(var(--mobile-board-limit), 54dvh, 430px);
+        --board-padding: clamp(10px, 2.8vw, 14px);
+        --grid-gap-3: clamp(9px, 2.4vw, 13px);
+        --grid-gap-4: clamp(8px, 2vw, 12px);
+        --grid-gap-5: clamp(6px, 1.6vw, 10px);
+        --grid-gap-6: clamp(5px, 1.25vw, 8px);
+    }
+
+    html,
+    body {
+        width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    body {
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        min-height: 100dvh;
+        padding: max(10px, env(safe-area-inset-top)) var(--mobile-safe-x) max(12px, env(safe-area-inset-bottom)) !important;
+        overscroll-behavior-y: contain;
+    }
+
+    .zen-wrapper,
+    .zen-container {
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+    }
+
+    .zen-wrapper {
+        align-items: stretch !important;
+        gap: var(--mobile-gap) !important;
+    }
+
+    .zen-container {
+        gap: var(--mobile-gap) !important;
+        margin: 0 auto;
+    }
+
+    .zen-header {
+        width: 100%;
+        min-height: 36px !important;
+        gap: 10px;
+    }
+
+    .brand {
+        min-width: 0;
+        gap: 8px !important;
+    }
+
+    .logo {
+        font-size: clamp(1.72rem, 8.8vw, 2.35rem) !important;
+        letter-spacing: -0.06em;
+    }
+
+    .badge {
+        min-width: 36px !important;
+        height: 18px !important;
+        padding: 0 7px !important;
+        font-size: 0.56rem !important;
+    }
+
+    .header-controls {
+        flex: 0 0 auto;
+        gap: 4px !important;
+        padding: 4px 5px !important;
+    }
+
+    .theme-toggle-btn {
+        width: 52px !important;
+        min-width: 52px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+    }
+
+    .toggle-track {
+        width: 46px !important;
+        min-width: 46px !important;
+        height: 24px !important;
+        min-height: 24px !important;
+    }
+
+    .toggle-thumb {
+        width: 22px !important;
+        min-width: 22px !important;
+        height: 22px !important;
+        min-height: 22px !important;
+    }
+
+    body.dark-mode .toggle-thumb {
+        left: 22px !important;
+    }
+
+    .icon-btn {
+        width: 30px !important;
+        min-width: 30px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+    }
+
+    .display-deck {
+        gap: var(--mobile-gap) !important;
+    }
+
+    .score-container,
+    .quick-settings,
+    .stats-deck,
+    .action-deck {
+        gap: clamp(7px, 2vw, 10px) !important;
+    }
+
+    .score-card {
+        min-width: 0;
+        padding: clamp(8px, 2.2vw, 10px) clamp(10px, 3vw, 14px) !important;
+        border-radius: clamp(13px, 3.4vw, 18px) !important;
+    }
+
+    .score-card .label {
+        font-size: clamp(0.54rem, 1.9vw, 0.62rem) !important;
+        letter-spacing: clamp(1px, 0.38vw, 1.5px) !important;
+    }
+
+    .score-card .value {
+        font-size: clamp(1.22rem, 6.2vw, 1.72rem) !important;
+    }
+
+    .quick-settings {
+        flex-wrap: wrap;
+    }
+
+    .quick-settings .select-pill {
+        flex: 1 1 calc(50% - 5px) !important;
+        min-width: 0;
+    }
+
+    .quick-settings .select-pill:last-child {
+        flex-basis: 100% !important;
+    }
+
+    .custom-select-trigger {
+        min-height: clamp(42px, 10.8vw, 48px);
+        padding: 8px clamp(12px, 3.4vw, 16px) !important;
+        font-size: clamp(0.82rem, 3.8vw, 1rem) !important;
+        border-radius: clamp(12px, 3.2vw, 16px) !important;
+    }
+
+    .custom-select-options {
+        max-height: min(42dvh, 260px);
+        overflow-y: auto !important;
+    }
+
+    .custom-select-option {
+        padding: 11px 14px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .board-deck,
+    .board-frame {
+        width: var(--board-size) !important;
+        max-width: 100% !important;
+        align-self: center;
+    }
+
+    .board-frame {
+        height: var(--board-size) !important;
+        border-radius: clamp(18px, 5vw, 26px) !important;
+    }
+
+    .matrix-board,
+    .overlay {
+        border-radius: inherit !important;
+    }
+
+    .grid-cell,
+    .tile-inner {
+        border-radius: clamp(8px, 2.1vw, 14px) !important;
+    }
+
+    .matrix-board.size-6 .grid-cell,
+    .board-frame.size-6 .tile-inner {
+        border-radius: clamp(7px, 1.7vw, 10px) !important;
+    }
+
+    .board-frame.size-4 .tile-inner {
+        font-size: clamp(1.35rem, 8.3vw, 2rem) !important;
+    }
+
+    .board-frame.size-5 .tile-inner {
+        font-size: clamp(1rem, 5.8vw, 1.45rem) !important;
+    }
+
+    .board-frame.size-6 .tile-inner {
+        font-size: clamp(0.82rem, 4.8vw, 1.18rem) !important;
+    }
+
+    .board-frame.size-6 .tile[data-value="128"] .tile-inner,
+    .board-frame.size-6 .tile[data-value="256"] .tile-inner,
+    .board-frame.size-6 .tile[data-value="512"] .tile-inner {
+        font-size: clamp(0.72rem, 4.1vw, 1rem) !important;
+    }
+
+    .board-frame.size-6 .tile[data-value="1024"] .tile-inner,
+    .board-frame.size-6 .tile[data-value="2048"] .tile-inner {
+        font-size: clamp(0.58rem, 3.4vw, 0.86rem) !important;
+    }
+
+    .stats-deck {
+        align-items: stretch;
+    }
+
+    .stat-pill {
+        min-width: 0;
+        padding: clamp(7px, 2vw, 10px) clamp(5px, 1.8vw, 9px) !important;
+        border-radius: clamp(13px, 3.4vw, 18px) !important;
+    }
+
+    .stat-pill .label {
+        max-width: 100%;
+        justify-content: center;
+        gap: 3px !important;
+        font-size: clamp(0.49rem, 2.35vw, 0.6rem) !important;
+        letter-spacing: clamp(0.35px, 0.25vw, 0.8px) !important;
+        white-space: nowrap;
+    }
+
+    .stat-pill .value {
+        font-size: clamp(0.82rem, 4.3vw, 1rem) !important;
+    }
+
+    .btn {
+        min-height: clamp(48px, 12vw, 58px);
+        padding: 9px clamp(10px, 3vw, 16px) !important;
+        border-radius: clamp(13px, 3.4vw, 18px) !important;
+        font-size: clamp(0.8rem, 3.7vw, 0.96rem) !important;
+        line-height: 1.15;
+    }
+
+    .btn i {
+        flex: 0 0 auto;
+    }
+
+    #btn-undo {
+        flex-wrap: wrap;
+        row-gap: 2px;
+    }
+
+    .drawer {
+        width: min(330px, 88vw) !important;
+    }
+}
+
+@media (max-width: 899px) and (max-height: 760px) {
+    :root {
+        --mobile-gap: 7px;
+        --board-size: min(calc(100vw - (var(--mobile-safe-x) * 2)), 48dvh, 390px);
+        --board-padding: clamp(8px, 2.4vw, 12px);
+        --grid-gap-4: 8px;
+        --grid-gap-5: 6px;
+        --grid-gap-6: 5px;
+    }
+
+    body {
+        padding-top: max(7px, env(safe-area-inset-top)) !important;
+        padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
+    }
+
+    .zen-header {
+        min-height: 32px !important;
+    }
+
+    .custom-select-trigger {
+        min-height: 38px;
+    }
+
+    .score-card,
+    .stat-pill {
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+    }
+
+    .btn {
+        min-height: 44px;
+    }
+}
+
+@media (max-width: 380px) {
+    :root {
+        --mobile-safe-x: 8px;
+        --board-size: min(calc(100vw - 16px), 48dvh, 360px);
+    }
+
+    .badge {
+        display: none !important;
+    }
+
+    .header-controls {
+        gap: 2px !important;
+        padding-inline: 4px !important;
+    }
+
+    .theme-toggle-btn {
+        width: 48px !important;
+        min-width: 48px !important;
+    }
+
+    .icon-btn {
+        width: 28px !important;
+        min-width: 28px !important;
+    }
+}
