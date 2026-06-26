@@ -36,7 +36,7 @@ The current codebase is intentionally simple: no build step, no framework lock-i
 - Updated app shell branding to **2024**.
 - Added SEO/Open Graph metadata.
 - Improved button/select labels and live regions.
-- Added runtime handling for reduced-motion users.
+- Added early accessibility CSS and reduced-motion handling.
 - Added page-hide save protection and drawer accessibility state syncing.
 
 ---
@@ -83,6 +83,7 @@ npx -y http-server -p 8080 -c-1
 ```text
 index.html          App shell, metadata, controls, board markup
 style.css           Visual system and responsive layout
+optimizations.css   Early accessibility and reduced-motion styles
 script.js           Core game logic, audio, persistence, canvas renderer
 optimizations.js    Runtime accessibility/performance enhancements
 README.md           Project guide
