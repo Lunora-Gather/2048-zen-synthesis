@@ -56,6 +56,14 @@ Not completed automatically:
 - Kept logic changes non-invasive by layering `optimizations.js` after the original `script.js`.
 - Kept first-paint user preference handling in CSS with `optimizations.css`.
 
+## Files Added or Changed
+
+- `index.html`
+- `README.md`
+- `OPTIMIZATION_REPORT.md`
+- `optimizations.css`
+- `optimizations.js`
+
 ## Recommended Follow-ups
 
 1. Rename the repository slug to `2024` in GitHub settings.
