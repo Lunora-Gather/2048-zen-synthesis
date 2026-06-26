@@ -18,43 +18,6 @@
         meta.setAttribute('content', value);
     }
 
-    function injectA11yStyles() {
-        if (document.getElementById('runtime-optimization-styles')) return;
-        const style = document.createElement('style');
-        style.id = 'runtime-optimization-styles';
-        style.textContent = `
-            .sr-only {
-                position: absolute !important;
-                width: 1px !important;
-                height: 1px !important;
-                padding: 0 !important;
-                margin: -1px !important;
-                overflow: hidden !important;
-                clip: rect(0, 0, 0, 0) !important;
-                white-space: nowrap !important;
-                border: 0 !important;
-            }
-
-            button:focus-visible,
-            select:focus-visible,
-            .custom-select-trigger:focus-visible,
-            .custom-select-option:focus-visible {
-                outline: 2px solid rgba(var(--accent-rgb), .75);
-                outline-offset: 3px;
-            }
-
-            body.reduce-motion *,
-            body.reduce-motion *::before,
-            body.reduce-motion *::after {
-                animation-duration: 0.001ms !important;
-                animation-iteration-count: 1 !important;
-                scroll-behavior: auto !important;
-                transition-duration: 0.001ms !important;
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
     function syncReducedMotionClass() {
         document.body.classList.toggle('reduce-motion', reducedMotionQuery.matches);
     }
@@ -76,11 +39,19 @@
             trigger.setAttribute('aria-haspopup', 'listbox');
             trigger.setAttribute('aria-expanded', customSelect.classList.contains('active') ? 'true' : 'false');
 
+            trigger.addEventListener('click', () => {
+                window.requestAnimationFrame(() => {
+                    trigger.setAttribute('aria-expanded', customSelect.classList.contains('active') ? 'true' : 'false');
+                });
+            });
+
             trigger.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault();
                     trigger.click();
-                    trigger.setAttribute('aria-expanded', customSelect.classList.contains('active') ? 'true' : 'false');
+                    window.requestAnimationFrame(() => {
+                        trigger.setAttribute('aria-expanded', customSelect.classList.contains('active') ? 'true' : 'false');
+                    });
                 }
                 if (event.key === 'Escape') {
                     customSelect.classList.remove('active');
@@ -138,12 +109,14 @@
         });
 
         window.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                if (game.drawerPanel && game.drawerPanel.classList.contains('open')) {
-                    game.toggleDrawer(false);
-                }
-                if (game.gameOverOverlay) game.gameOverOverlay.classList.add('hidden');
-                if (game.gameWinOverlay && game.keepPlayingAfterWin) game.gameWinOverlay.classList.add('hidden');
+            if (event.key !== 'Escape') return;
+
+            if (game.drawerPanel && game.drawerPanel.classList.contains('open')) {
+                game.toggleDrawer(false);
+            }
+
+            if (game.gameWinOverlay && game.keepPlayingAfterWin) {
+                game.gameWinOverlay.classList.add('hidden');
             }
         });
     }
@@ -165,7 +138,6 @@
     function boot() {
         document.title = APP_NAME;
         document.documentElement.dataset.app = APP_NAME;
-        injectA11yStyles();
         syncReducedMotionClass();
         syncThemeColor();
         improveCustomDropdownKeyboard();
