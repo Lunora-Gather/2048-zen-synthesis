@@ -50,7 +50,7 @@ Not completed automatically:
 - Added dialog semantics for win/game-over overlays.
 - Added labels for select controls.
 - Added keyboard support and focus styles for custom dropdown triggers.
-- Added Escape-key handling for closing the drawer and non-blocking win overlay state.
+- Added Escape-key handling for the drawer and non-blocking win overlay state.
 - Added early-loading `.sr-only` and focus-visible styles through `optimizations.css` to avoid first-paint label flicker.
 
 ### 3. Runtime performance and resilience
