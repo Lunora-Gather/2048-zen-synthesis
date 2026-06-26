@@ -5,7 +5,7 @@
 (function () {
     'use strict';
 
-    const APP_NAME = '2048: Zen Synthesis';
+    const APP_NAME = '2048';
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     function setMeta(name, value, attr = 'name') {
