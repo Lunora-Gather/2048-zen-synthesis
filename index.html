@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="description" content="2048: Zen Synthesis 是一个可直接在浏览器游玩的高级响应式 2048 网页游戏，包含玻璃拟态棋盘、动态背景、合成音效、成就系统和移动端适配。">
-    <meta name="keywords" content="2048, Zen Synthesis, browser game, puzzle game, GitHub Pages, JavaScript game">
+    <meta name="description" content="2048 是一个可以直接在浏览器中游玩的数字合并小游戏，支持键盘、触屏、撤销、分数记录和多种棋盘大小。">
+    <meta name="keywords" content="2048, browser game, puzzle game, GitHub Pages, JavaScript game">
     <meta name="theme-color" content="#0a0c14">
     <meta name="color-scheme" content="light dark">
-    <meta property="og:title" content="2048: Zen Synthesis">
-    <meta property="og:description" content="Play a premium responsive 2048 synthesis experience directly in the browser.">
+    <meta property="og:title" content="2048">
+    <meta property="og:description" content="一个可以直接在浏览器中游玩的 2048 小游戏。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lunora-gather.github.io/2048/">
-    <meta property="og:site_name" content="2048: Zen Synthesis">
+    <meta property="og:site_name" content="2048">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="2048: Zen Synthesis">
-    <meta name="twitter:description" content="A premium responsive 2048 browser game with dynamic visuals and Web Audio synthesis.">
+    <meta name="twitter:title" content="2048">
+    <meta name="twitter:description" content="一个可以直接在浏览器中游玩的 2048 小游戏。">
     <link rel="canonical" href="https://lunora-gather.github.io/2048/">
-    <title>2048: Zen Synthesis</title>
+    <title>2048</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,12 +24,12 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css?v=32">
-    <link rel="stylesheet" href="optimizations.css?v=2">
+    <link rel="stylesheet" href="optimizations.css?v=3">
 </head>
 <body>
     <noscript>
         <div class="noscript-message">
-            <strong>2048: Zen Synthesis needs JavaScript.</strong>
+            <strong>2048 需要 JavaScript 才能运行。</strong>
             <span>请在浏览器中启用 JavaScript 后重新打开页面。</span>
         </div>
     </noscript>
@@ -41,7 +41,7 @@
             <header class="zen-header">
                 <div class="brand">
                     <h1 class="logo">2048</h1>
-                    <span class="badge">ZEN</span>
+                    <span class="badge">GAME</span>
                 </div>
                 
                 <div class="header-controls">
@@ -93,20 +93,20 @@
 
                     <div class="select-pill">
                         <select id="theme-select" aria-label="选择视觉主题">
-                            <option value="cyberpunk" selected>Cyberpunk</option>
-                            <option value="classic">Retro Gold</option>
-                            <option value="pastel">Pastel Dream</option>
-                            <option value="monochrome">Minimalist</option>
+                            <option value="cyberpunk" selected>紫色主题</option>
+                            <option value="classic">经典主题</option>
+                            <option value="pastel">清新主题</option>
+                            <option value="monochrome">简洁主题</option>
                         </select>
                         <i class="fa-solid fa-chevron-down select-arrow"></i>
                     </div>
 
                     <div class="select-pill">
                         <select id="synth-select" aria-label="选择音效预设">
-                            <option value="zen" selected>Zen Chimes</option>
-                            <option value="cyber">Cyber Pluck</option>
-                            <option value="retro">Retro Synth</option>
-                            <option value="mech">Mech Switch</option>
+                            <option value="zen" selected>默认音效</option>
+                            <option value="cyber">电子音效</option>
+                            <option value="retro">复古音效</option>
+                            <option value="mech">机械音效</option>
                         </select>
                         <i class="fa-solid fa-chevron-down select-arrow"></i>
                     </div>
@@ -135,7 +135,7 @@
                         <div class="overlay-content win">
                             <i class="fa-solid fa-circle-check status-icon success"></i>
                             <h2>达成 2048！</h2>
-                            <p>您已成功合成 Zen 核心，是否继续挑战高分？</p>
+                            <p>你已经成功合成 2048，是否继续挑战更高分？</p>
                             <div class="button-row">
                                 <button id="btn-keep-going" class="btn btn-secondary">继续挑战</button>
                                 <button id="btn-win-restart" class="btn btn-primary">新游戏</button>
@@ -148,11 +148,11 @@
             <!-- 系统参数数据 -->
             <section class="stats-deck" aria-label="Game statistics">
                 <div class="stat-pill">
-                    <span class="label"><i class="fa-regular fa-clock"></i> UPTIME</span>
+                    <span class="label"><i class="fa-regular fa-clock"></i> TIME</span>
                     <span id="stat-time" class="value">00:00</span>
                 </div>
                 <div class="stat-pill">
-                    <span class="label"><i class="fa-solid fa-code-merge"></i> CYCLES</span>
+                    <span class="label"><i class="fa-solid fa-code-merge"></i> MOVES</span>
                     <span id="stat-moves" class="value">0</span>
                 </div>
                 <div class="stat-pill">
@@ -173,41 +173,41 @@
         </div>
 
         <!-- 右侧账本区（包含成就与日志） -->
-        <div id="drawer-panel" class="drawer" aria-label="System ledger">
+        <div id="drawer-panel" class="drawer" aria-label="Game information">
             <div class="drawer-header">
-                <h3><i class="fa-solid fa-award"></i> System Ledger</h3>
+                <h3><i class="fa-solid fa-award"></i> 游戏信息</h3>
                 <button id="btn-drawer-close" class="close-btn" aria-label="关闭成就与日志"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div class="drawer-content">
                 <!-- 成就区域 -->
-                <div class="drawer-section">
-                    <h4 class="subtitle">ACHIEVEMENTS</h4>
+                <div class="drawer-section achievements-section">
+                    <h4 class="subtitle">成就</h4>
                     <div class="milestones-grid">
                         <div id="achieve-first" class="milestone-card locked">
                             <i class="fa-solid fa-square-plus"></i>
-                            <span class="name">First Spark</span>
+                            <span class="name">首次合并</span>
                         </div>
                         <div id="achieve-64" class="milestone-card locked">
                             <i class="fa-solid fa-heart"></i>
-                            <span class="name">Deca Merge</span>
+                            <span class="name">合成 64</span>
                         </div>
                         <div id="achieve-512" class="milestone-card locked">
                             <i class="fa-solid fa-compass"></i>
-                            <span class="name">Matrix Elite</span>
+                            <span class="name">合成 512</span>
                         </div>
                         <div id="achieve-2048" class="milestone-card locked">
                             <i class="fa-solid fa-crown"></i>
-                            <span class="name">Zen Master</span>
+                            <span class="name">合成 2048</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- 实时日志区域 -->
                 <div class="drawer-section log-section">
-                    <h4 class="subtitle">ACTIVITY STREAM</h4>
+                    <h4 class="subtitle">操作消息</h4>
                     <div id="synthesis-ledger" class="console-box">
-                        <div class="console-line init">[SYSTEM] Neural interface ready.</div>
+                        <div class="console-line init">[SYSTEM] 游戏已准备好。</div>
                     </div>
                 </div>
             </div>
@@ -218,6 +218,6 @@
     <div id="drawer-backdrop" class="drawer-backdrop"></div>
 
     <script src="script.js?v=32"></script>
-    <script src="optimizations.js?v=1"></script>
+    <script src="optimizations.js?v=2"></script>
 </body>
 </html>
