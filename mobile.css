@@ -1,15 +1,15 @@
 /* Mobile-only responsive polish. Desktop layout is intentionally untouched. */
 @media (max-width: 899px) {
     :root {
-        --mobile-safe-x: clamp(8px, 2.6vw, 14px);
-        --mobile-gap: clamp(6px, 1.05dvh, 10px);
+        --mobile-safe-x: clamp(12px, 3.8vw, 18px);
+        --mobile-gap: clamp(6px, 1dvh, 9px);
         --mobile-board-limit: calc(100vw - (var(--mobile-safe-x) * 2));
-        --board-size: min(var(--mobile-board-limit), 62dvh, 460px);
-        --board-padding: clamp(9px, 2.35vw, 13px);
-        --grid-gap-3: clamp(8px, 2.2vw, 12px);
-        --grid-gap-4: clamp(7px, 1.8vw, 11px);
-        --grid-gap-5: clamp(5px, 1.35vw, 8px);
-        --grid-gap-6: clamp(4px, 1vw, 7px);
+        --board-size: min(var(--mobile-board-limit), 55dvh, 420px);
+        --board-padding: clamp(8px, 2.2vw, 12px);
+        --grid-gap-3: clamp(8px, 2.1vw, 11px);
+        --grid-gap-4: clamp(7px, 1.7vw, 10px);
+        --grid-gap-5: clamp(5px, 1.3vw, 8px);
+        --grid-gap-6: clamp(4px, 1vw, 6px);
     }
 
     html,
@@ -23,31 +23,32 @@
         align-items: flex-start !important;
         justify-content: flex-start !important;
         min-height: 100dvh;
-        padding: max(7px, env(safe-area-inset-top)) var(--mobile-safe-x) max(9px, env(safe-area-inset-bottom)) !important;
+        padding: max(10px, env(safe-area-inset-top)) var(--mobile-safe-x) max(12px, env(safe-area-inset-bottom)) !important;
         overscroll-behavior-y: contain;
     }
 
     .zen-wrapper,
     .zen-container {
         width: 100% !important;
-        max-width: none !important;
+        max-width: 430px !important;
         min-width: 0 !important;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .zen-wrapper {
-        align-items: stretch !important;
+        align-items: center !important;
         gap: var(--mobile-gap) !important;
     }
 
     .zen-container {
         gap: var(--mobile-gap) !important;
-        margin: 0 auto;
     }
 
     .zen-header {
         width: 100%;
-        min-height: 30px !important;
-        gap: 8px;
+        min-height: 32px !important;
+        gap: 10px;
     }
 
     .brand {
@@ -56,8 +57,8 @@
     }
 
     .logo {
-        font-size: clamp(1.62rem, 8.2vw, 2.18rem) !important;
-        letter-spacing: -0.065em;
+        font-size: clamp(1.58rem, 7.8vw, 2.08rem) !important;
+        letter-spacing: -0.06em;
     }
 
     .badge {
@@ -69,21 +70,21 @@
 
     .header-controls {
         flex: 0 0 auto;
-        gap: 3px !important;
-        padding: 3px 4px !important;
+        gap: 4px !important;
+        padding: 4px 5px !important;
         box-shadow: 0 5px 15px rgba(15, 23, 42, 0.035) !important;
     }
 
     .theme-toggle-btn {
-        width: 48px !important;
-        min-width: 48px !important;
+        width: 50px !important;
+        min-width: 50px !important;
         height: 28px !important;
         min-height: 28px !important;
     }
 
     .toggle-track {
-        width: 42px !important;
-        min-width: 42px !important;
+        width: 44px !important;
+        min-width: 44px !important;
         height: 22px !important;
         min-height: 22px !important;
     }
@@ -96,7 +97,7 @@
     }
 
     body.dark-mode .toggle-thumb {
-        left: 20px !important;
+        left: 22px !important;
     }
 
     .icon-btn {
@@ -126,7 +127,7 @@
 
     .score-card {
         min-width: 0;
-        padding: clamp(6px, 1.75vw, 8px) clamp(10px, 2.8vw, 13px) !important;
+        padding: clamp(6px, 1.7vw, 8px) clamp(10px, 2.8vw, 13px) !important;
         border-radius: clamp(13px, 3.3vw, 17px) !important;
     }
 
@@ -137,7 +138,7 @@
     }
 
     .score-card .value {
-        font-size: clamp(1.15rem, 5.8vw, 1.58rem) !important;
+        font-size: clamp(1.12rem, 5.5vw, 1.5rem) !important;
         line-height: 1.05 !important;
     }
 
@@ -155,9 +156,9 @@
     }
 
     .custom-select-trigger {
-        min-height: clamp(38px, 9.8vw, 44px);
+        min-height: clamp(38px, 9.4vw, 43px);
         padding: 7px clamp(12px, 3.2vw, 15px) !important;
-        font-size: clamp(0.82rem, 3.7vw, 0.96rem) !important;
+        font-size: clamp(0.8rem, 3.55vw, 0.94rem) !important;
         border-radius: clamp(12px, 3.1vw, 16px) !important;
     }
 
@@ -204,26 +205,26 @@
     }
 
     .board-frame.size-4 .tile-inner {
-        font-size: clamp(1.45rem, 8.6vw, 2.05rem) !important;
+        font-size: clamp(1.36rem, 8vw, 1.92rem) !important;
     }
 
     .board-frame.size-5 .tile-inner {
-        font-size: clamp(1.04rem, 6vw, 1.48rem) !important;
+        font-size: clamp(0.98rem, 5.6vw, 1.38rem) !important;
     }
 
     .board-frame.size-6 .tile-inner {
-        font-size: clamp(0.86rem, 5vw, 1.2rem) !important;
+        font-size: clamp(0.8rem, 4.65vw, 1.1rem) !important;
     }
 
     .board-frame.size-6 .tile[data-value="128"] .tile-inner,
     .board-frame.size-6 .tile[data-value="256"] .tile-inner,
     .board-frame.size-6 .tile[data-value="512"] .tile-inner {
-        font-size: clamp(0.76rem, 4.35vw, 1.02rem) !important;
+        font-size: clamp(0.7rem, 4vw, 0.95rem) !important;
     }
 
     .board-frame.size-6 .tile[data-value="1024"] .tile-inner,
     .board-frame.size-6 .tile[data-value="2048"] .tile-inner {
-        font-size: clamp(0.62rem, 3.55vw, 0.88rem) !important;
+        font-size: clamp(0.58rem, 3.3vw, 0.82rem) !important;
     }
 
     .stats-deck {
@@ -232,7 +233,7 @@
 
     .stat-pill {
         min-width: 0;
-        padding: clamp(5px, 1.55vw, 8px) clamp(5px, 1.6vw, 8px) !important;
+        padding: clamp(5px, 1.45vw, 7px) clamp(5px, 1.6vw, 8px) !important;
         border-radius: clamp(13px, 3.3vw, 17px) !important;
     }
 
@@ -240,21 +241,21 @@
         max-width: 100%;
         justify-content: center;
         gap: 3px !important;
-        font-size: clamp(0.51rem, 2.35vw, 0.61rem) !important;
+        font-size: clamp(0.5rem, 2.25vw, 0.6rem) !important;
         letter-spacing: clamp(0.35px, 0.22vw, 0.75px) !important;
         white-space: nowrap;
     }
 
     .stat-pill .value {
-        font-size: clamp(0.78rem, 4vw, 0.94rem) !important;
+        font-size: clamp(0.76rem, 3.8vw, 0.9rem) !important;
         line-height: 1.1 !important;
     }
 
     .btn {
-        min-height: clamp(42px, 10.4vw, 48px);
-        padding: 8px clamp(10px, 2.8vw, 15px) !important;
+        min-height: clamp(40px, 9.7vw, 46px);
+        padding: 7px clamp(10px, 2.8vw, 15px) !important;
         border-radius: clamp(13px, 3.3vw, 17px) !important;
-        font-size: clamp(0.78rem, 3.55vw, 0.92rem) !important;
+        font-size: clamp(0.76rem, 3.4vw, 0.88rem) !important;
         line-height: 1.12;
     }
 
@@ -274,21 +275,22 @@
 
 @media (max-width: 899px) and (max-height: 760px) {
     :root {
+        --mobile-safe-x: clamp(12px, 3.6vw, 16px);
         --mobile-gap: 6px;
-        --board-size: min(calc(100vw - (var(--mobile-safe-x) * 2)), 58dvh, 430px);
-        --board-padding: clamp(8px, 2.15vw, 11px);
+        --board-size: min(calc(100vw - (var(--mobile-safe-x) * 2)), 51dvh, 395px);
+        --board-padding: clamp(8px, 2vw, 11px);
         --grid-gap-4: 7px;
         --grid-gap-5: 5px;
         --grid-gap-6: 4px;
     }
 
     body {
-        padding-top: max(6px, env(safe-area-inset-top)) !important;
-        padding-bottom: max(7px, env(safe-area-inset-bottom)) !important;
+        padding-top: max(8px, env(safe-area-inset-top)) !important;
+        padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
     }
 
     .zen-header {
-        min-height: 28px !important;
+        min-height: 30px !important;
     }
 
     .custom-select-trigger {
@@ -308,8 +310,8 @@
 
 @media (max-width: 380px) {
     :root {
-        --mobile-safe-x: 7px;
-        --board-size: min(calc(100vw - 14px), 57dvh, 390px);
+        --mobile-safe-x: 12px;
+        --board-size: min(calc(100vw - 24px), 50dvh, 360px);
     }
 
     .badge {
@@ -317,8 +319,8 @@
     }
 
     .header-controls {
-        gap: 2px !important;
-        padding-inline: 4px !important;
+        gap: 3px !important;
+        padding-inline: 5px !important;
     }
 
     .theme-toggle-btn {
