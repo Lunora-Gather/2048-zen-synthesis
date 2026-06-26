@@ -10,6 +10,12 @@ Repository scanned through the accessible GitHub connector files and metadata:
 - `README.md`
 - latest commit metadata on `main`
 
+New optimization files added during this pass:
+
+- `optimizations.css`
+- `optimizations.js`
+- `OPTIMIZATION_REPORT.md`
+
 The project is a static browser game with no package manifest or build pipeline detected through the accessible file checks.
 
 ## Rename Work
