@@ -1,13 +1,13 @@
 /* Mobile-only responsive polish. Desktop layout is intentionally untouched. */
 @media (max-width: 899px) {
     :root {
-        --mobile-safe-x: clamp(14px, 4vw, 20px);
+        --mobile-safe-x: clamp(10px, 3vw, 16px);
         --mobile-gap: clamp(6px, 0.95dvh, 9px);
-        --board-size: min(calc(100vw - (var(--mobile-safe-x) * 2)), 47dvh, 390px);
-        --board-padding: clamp(7px, 1.9vw, 10px);
-        --grid-gap-4: clamp(6px, 1.45vw, 9px);
-        --grid-gap-5: clamp(4px, 1.1vw, 7px);
-        --grid-gap-6: clamp(3px, 0.85vw, 5px);
+        --board-size: min(calc(100vw - (var(--mobile-safe-x) * 2)), 52dvh, 430px);
+        --board-padding: clamp(8px, 2vw, 11px);
+        --grid-gap-4: clamp(6px, 1.5vw, 10px);
+        --grid-gap-5: clamp(4px, 1.15vw, 8px);
+        --grid-gap-6: clamp(3px, 0.95vw, 6px);
     }
 
     html,
@@ -47,7 +47,7 @@
 
     .zen-header {
         width: 100%;
-        min-height: 30px !important;
+        min-height: 31px !important;
         gap: 8px;
     }
 
@@ -57,15 +57,15 @@
     }
 
     .logo {
-        font-size: clamp(1.5rem, 7.2vw, 1.95rem) !important;
+        font-size: clamp(1.58rem, 7.7vw, 2.08rem) !important;
         letter-spacing: -0.055em;
     }
 
     .badge {
-        min-width: 30px !important;
-        height: 15px !important;
+        min-width: 32px !important;
+        height: 16px !important;
         padding: 0 6px !important;
-        font-size: 0.5rem !important;
+        font-size: 0.52rem !important;
     }
 
     .header-controls {
@@ -76,42 +76,42 @@
     }
 
     .theme-toggle-btn {
-        width: 46px !important;
-        min-width: 46px !important;
-        height: 26px !important;
-        min-height: 26px !important;
+        width: 48px !important;
+        min-width: 48px !important;
+        height: 27px !important;
+        min-height: 27px !important;
     }
 
     .toggle-track {
-        width: 40px !important;
-        min-width: 40px !important;
-        height: 20px !important;
-        min-height: 20px !important;
+        width: 42px !important;
+        min-width: 42px !important;
+        height: 21px !important;
+        min-height: 21px !important;
     }
 
     .toggle-thumb {
-        width: 18px !important;
-        min-width: 18px !important;
-        height: 18px !important;
-        min-height: 18px !important;
+        width: 19px !important;
+        min-width: 19px !important;
+        height: 19px !important;
+        min-height: 19px !important;
     }
 
     body.dark-mode .toggle-thumb {
-        left: 20px !important;
+        left: 21px !important;
     }
 
     .icon-btn {
-        width: 26px !important;
-        min-width: 26px !important;
-        height: 26px !important;
-        min-height: 26px !important;
+        width: 27px !important;
+        min-width: 27px !important;
+        height: 27px !important;
+        min-height: 27px !important;
     }
 
     .score-container,
     .quick-settings,
     .stats-deck,
     .action-deck {
-        gap: clamp(5px, 1.45vw, 7px) !important;
+        gap: clamp(5px, 1.5vw, 8px) !important;
     }
 
     .score-card,
@@ -129,12 +129,12 @@
 
     .score-card .label {
         margin-bottom: 0 !important;
-        font-size: clamp(0.47rem, 1.6vw, 0.55rem) !important;
+        font-size: clamp(0.48rem, 1.65vw, 0.56rem) !important;
         letter-spacing: clamp(0.8px, 0.3vw, 1.2px) !important;
     }
 
     .score-card .value {
-        font-size: clamp(1rem, 4.9vw, 1.3rem) !important;
+        font-size: clamp(1.05rem, 5.1vw, 1.38rem) !important;
         line-height: 1.02 !important;
     }
 
@@ -152,9 +152,9 @@
     }
 
     .custom-select-trigger {
-        min-height: clamp(32px, 7.8vw, 36px) !important;
+        min-height: clamp(33px, 8vw, 38px) !important;
         padding: 5px clamp(10px, 2.8vw, 13px) !important;
-        font-size: clamp(0.74rem, 3.1vw, 0.84rem) !important;
+        font-size: clamp(0.76rem, 3.2vw, 0.88rem) !important;
         border-radius: clamp(11px, 3vw, 15px) !important;
     }
 
@@ -187,9 +187,9 @@
         border-radius: clamp(5px, 1.3vw, 8px) !important;
     }
 
-    .board-frame.size-4 .tile-inner { font-size: clamp(1.25rem, 7.3vw, 1.75rem) !important; }
-    .board-frame.size-5 .tile-inner { font-size: clamp(0.88rem, 5vw, 1.22rem) !important; }
-    .board-frame.size-6 .tile-inner { font-size: clamp(0.74rem, 4.25vw, 1rem) !important; }
+    .board-frame.size-4 .tile-inner { font-size: clamp(1.32rem, 7.8vw, 1.9rem) !important; }
+    .board-frame.size-5 .tile-inner { font-size: clamp(0.95rem, 5.4vw, 1.34rem) !important; }
+    .board-frame.size-6 .tile-inner { font-size: clamp(0.8rem, 4.55vw, 1.08rem) !important; }
 
     .stat-pill {
         min-width: 0;
@@ -200,43 +200,43 @@
     .stat-pill .label {
         justify-content: center;
         gap: 3px !important;
-        font-size: clamp(0.45rem, 1.95vw, 0.53rem) !important;
+        font-size: clamp(0.46rem, 2vw, 0.54rem) !important;
         white-space: nowrap;
     }
 
     .stat-pill .value {
-        font-size: clamp(0.7rem, 3.45vw, 0.82rem) !important;
+        font-size: clamp(0.72rem, 3.55vw, 0.86rem) !important;
         line-height: 1.08 !important;
     }
 
     .btn {
-        min-height: clamp(34px, 8.1vw, 39px) !important;
+        min-height: clamp(34px, 8.1vw, 40px) !important;
         padding: 5px clamp(9px, 2.3vw, 13px) !important;
         border-radius: clamp(12px, 3vw, 15px) !important;
-        font-size: clamp(0.7rem, 3vw, 0.8rem) !important;
+        font-size: clamp(0.72rem, 3.05vw, 0.84rem) !important;
         line-height: 1.08;
     }
 }
 
 @media (max-width: 899px) and (max-height: 760px) {
     :root {
-        --mobile-gap: 4px;
-        --board-size: min(calc(100vw - (var(--mobile-safe-x) * 2)), 45dvh, 370px);
-        --board-padding: clamp(7px, 1.8vw, 10px);
-        --grid-gap-6: 3px;
+        --mobile-gap: 5px;
+        --board-size: min(calc(100vw - (var(--mobile-safe-x) * 2)), 49dvh, 395px);
+        --board-padding: clamp(7px, 1.9vw, 10px);
+        --grid-gap-6: 4px;
     }
 
-    .custom-select-trigger { min-height: 31px !important; }
-    .btn { min-height: 33px !important; }
+    .custom-select-trigger { min-height: 32px !important; }
+    .btn { min-height: 34px !important; }
 }
 
 @media (max-width: 380px) {
     :root {
-        --mobile-safe-x: 14px;
-        --board-size: min(calc(100vw - 28px), 44dvh, 350px);
+        --mobile-safe-x: 12px;
+        --board-size: min(calc(100vw - 24px), 48dvh, 370px);
     }
 
     .badge { display: none !important; }
-    .theme-toggle-btn { width: 44px !important; min-width: 44px !important; }
+    .theme-toggle-btn { width: 46px !important; min-width: 46px !important; }
     .icon-btn { width: 26px !important; min-width: 26px !important; }
 }
