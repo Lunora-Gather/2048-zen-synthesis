@@ -35,7 +35,7 @@ The current codebase is intentionally simple: no build step, no framework lock-i
 ### 4. ♿ Optimization pass
 - Updated app shell branding to **2024**.
 - Added SEO/Open Graph metadata.
-- Improved button/select labels, dialogs, and live regions.
+- Improved button/select labels and live regions.
 - Added early accessibility CSS and reduced-motion handling.
 - Added page-hide save protection and drawer accessibility state syncing.
 
