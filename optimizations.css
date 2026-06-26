@@ -71,55 +71,95 @@ body::after {
 }
 
 .header-controls {
-    gap: 6px;
-    padding: 4px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.44);
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 body.dark-mode .header-controls {
-    background: rgba(15, 18, 31, 0.42);
+    background: transparent !important;
 }
 
-.theme-toggle-btn {
-    width: 46px;
-    height: 28px;
-    background: transparent !important;
-    box-shadow: none !important;
+.theme-toggle-btn,
+.icon-btn {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    display: inline-grid !important;
+    place-items: center !important;
+    padding: 0 !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.5) !important;
+    color: var(--text-3) !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+    transform: none !important;
+}
+
+body.dark-mode .theme-toggle-btn,
+body.dark-mode .icon-btn {
+    background: rgba(255, 255, 255, 0.045) !important;
+}
+
+.theme-toggle-btn:hover,
+.icon-btn:hover {
+    color: var(--text-2) !important;
+    border-color: rgba(var(--accent-rgb), 0.18) !important;
+    background: rgba(var(--accent-rgb), 0.06) !important;
+    transform: none !important;
+}
+
+.toggle-track {
+    width: 100% !important;
+    height: 100% !important;
+    display: grid !important;
+    place-items: center !important;
+    position: static !important;
 }
 
 .toggle-thumb {
-    background: rgba(255, 255, 255, 0.72) !important;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
+    transition: none !important;
 }
 
 body.dark-mode .toggle-thumb {
-    background: rgba(255, 255, 255, 0.12) !important;
+    background: transparent !important;
+    transform: none !important;
 }
 
 .toggle-thumb .light-icon,
 .toggle-thumb .dark-icon {
+    grid-area: 1 / 1 !important;
     color: var(--text-3) !important;
+    font-size: 0.86rem !important;
 }
 
-.icon-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 999px;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: var(--text-3);
+body.dark-mode .toggle-thumb .dark-icon,
+body:not(.dark-mode) .toggle-thumb .light-icon {
+    opacity: 1 !important;
+    transform: none !important;
 }
 
-.icon-btn:hover {
-    color: var(--text-2);
-    border-color: var(--border);
-    background: rgba(var(--accent-rgb), 0.035) !important;
-    transform: none;
+body.dark-mode .toggle-thumb .light-icon,
+body:not(.dark-mode) .toggle-thumb .dark-icon {
+    opacity: 0 !important;
+    transform: none !important;
 }
 
 #btn-sound-toggle.muted {
@@ -321,7 +361,7 @@ body.dark-mode .console-box::-webkit-scrollbar-thumb {
 
 @media (max-width: 899px) {
     .header-controls {
-        border-radius: 16px;
+        border-radius: 0 !important;
     }
 
     .drawer {
