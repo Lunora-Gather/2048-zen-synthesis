@@ -3,31 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2048: Zen Synthesis</title>
+    <meta name="description" content="2024 是一个现代化、响应式、带声音反馈和动态视觉效果的 2048 风格合成游戏。">
+    <meta name="theme-color" content="#a855f7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="2024">
+    <meta name="format-detection" content="telephone=no">
+    <meta property="og:title" content="2024">
+    <meta property="og:description" content="响应式数字合成游戏，支持主题、声音、撤销、成就与动态背景。">
+    <meta property="og:type" content="website">
+    <title>2024</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=30">
+    <link rel="stylesheet" href="style.css?v=31">
 </head>
 <body>
-    <canvas id="bg-canvas"></canvas>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <div class="zen-wrapper">
         <!-- 左侧游戏主区域 -->
         <div class="zen-container">
             <!-- 头部导航与主题切换 -->
             <header class="zen-header">
-                <div class="brand">
-                    <h1 class="logo">2048</h1>
+                <div class="brand" aria-label="2024">
+                    <h1 class="logo">2024</h1>
                     <span class="badge">ZEN</span>
                 </div>
                 
-                <div class="header-controls">
+                <div class="header-controls" aria-label="显示与声音控制">
                     <!-- 暗黑/明亮模式切换 -->
-                    <button id="btn-theme-toggle" class="theme-toggle-btn" title="切换显示模式">
-                        <div class="toggle-track">
+                    <button id="btn-theme-toggle" class="theme-toggle-btn" type="button" title="切换显示模式" aria-label="切换显示模式">
+                        <div class="toggle-track" aria-hidden="true">
                             <div class="toggle-thumb">
                                 <i class="fa-solid fa-moon dark-icon"></i>
                                 <i class="fa-solid fa-sun light-icon"></i>
@@ -36,24 +44,24 @@
                     </button>
 
                     <!-- 音效切换 -->
-                    <button id="btn-sound-toggle" class="icon-btn" title="切换音效">
-                        <i class="fa-solid fa-volume-xmark"></i>
+                    <button id="btn-sound-toggle" class="icon-btn" type="button" title="切换音效" aria-label="切换音效">
+                        <i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>
                     </button>
 
                     <!-- 手机端成就/日志抽屉触发按钮 -->
-                    <button id="btn-achievements-trigger" class="icon-btn" title="查看成就与日志">
-                        <i class="fa-solid fa-award"></i>
+                    <button id="btn-achievements-trigger" class="icon-btn" type="button" title="查看成就与日志" aria-label="查看成就与日志">
+                        <i class="fa-solid fa-award" aria-hidden="true"></i>
                     </button>
                 </div>
             </header>
 
             <!-- 得分与基本控制 -->
-            <section class="display-deck">
+            <section class="display-deck" aria-label="得分与设置">
                 <div class="score-container">
                     <div class="score-card current">
                         <span class="label">SCORE</span>
-                        <span id="current-score" class="value">0</span>
-                        <div id="score-addition-container" class="score-addition-container"></div>
+                        <span id="current-score" class="value" aria-live="polite">0</span>
+                        <div id="score-addition-container" class="score-addition-container" aria-hidden="true"></div>
                     </div>
                     <div class="score-card best">
                         <span class="label">BEST</span>
@@ -63,62 +71,65 @@
 
                 <div class="quick-settings">
                     <div class="select-pill">
-                        <select id="grid-size">
+                        <label class="sr-only" for="grid-size">棋盘尺寸</label>
+                        <select id="grid-size" aria-label="棋盘尺寸">
                             <option value="4" selected>4 × 4</option>
                             <option value="5">5 × 5</option>
                             <option value="6">6 × 6</option>
                         </select>
-                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                        <i class="fa-solid fa-chevron-down select-arrow" aria-hidden="true"></i>
                     </div>
 
                     <div class="select-pill">
-                        <select id="theme-select">
+                        <label class="sr-only" for="theme-select">视觉主题</label>
+                        <select id="theme-select" aria-label="视觉主题">
                             <option value="cyberpunk" selected>Cyberpunk</option>
                             <option value="classic">Retro Gold</option>
                             <option value="pastel">Pastel Dream</option>
                             <option value="monochrome">Minimalist</option>
                         </select>
-                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                        <i class="fa-solid fa-chevron-down select-arrow" aria-hidden="true"></i>
                     </div>
 
                     <div class="select-pill">
-                        <select id="synth-select">
+                        <label class="sr-only" for="synth-select">声音预设</label>
+                        <select id="synth-select" aria-label="声音预设">
                             <option value="zen" selected>Zen Chimes</option>
                             <option value="cyber">Cyber Pluck</option>
                             <option value="retro">Retro Synth</option>
                             <option value="mech">Mech Switch</option>
                         </select>
-                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                        <i class="fa-solid fa-chevron-down select-arrow" aria-hidden="true"></i>
                     </div>
                 </div>
             </section>
 
             <!-- 棋盘区域 -->
-            <main class="board-deck">
+            <main class="board-deck" aria-label="游戏棋盘">
                 <div class="board-frame">
-                    <div id="board" class="matrix-board size-4">
+                    <div id="board" class="matrix-board size-4" role="application" aria-label="2024 游戏棋盘，使用方向键或滑动移动方块">
                         <!-- 动态生成的网格底板 -->
                     </div>
-                    <div id="tiles-container" class="tiles-container"></div>
+                    <div id="tiles-container" class="tiles-container" aria-live="polite"></div>
 
                     <!-- 游戏结束/胜利覆层 -->
-                    <div id="game-over-overlay" class="overlay hidden">
+                    <div id="game-over-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="game-over-title">
                         <div class="overlay-content">
-                            <i class="fa-solid fa-circle-exclamation status-icon warning"></i>
-                            <h2>棋盘已满</h2>
+                            <i class="fa-solid fa-circle-exclamation status-icon warning" aria-hidden="true"></i>
+                            <h2 id="game-over-title">棋盘已满</h2>
                             <p>无法再进行任何合并，请重新开始游戏。</p>
-                            <button id="btn-retry" class="btn btn-primary">重新开始</button>
+                            <button id="btn-retry" class="btn btn-primary" type="button">重新开始</button>
                         </div>
                     </div>
 
-                    <div id="game-win-overlay" class="overlay hidden">
+                    <div id="game-win-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="game-win-title">
                         <div class="overlay-content win">
-                            <i class="fa-solid fa-circle-check status-icon success"></i>
-                            <h2>达成 2048！</h2>
+                            <i class="fa-solid fa-circle-check status-icon success" aria-hidden="true"></i>
+                            <h2 id="game-win-title">达成 2048！</h2>
                             <p>您已成功合成 Zen 核心，是否继续挑战高分？</p>
                             <div class="button-row">
-                                <button id="btn-keep-going" class="btn btn-secondary">继续挑战</button>
-                                <button id="btn-win-restart" class="btn btn-primary">新游戏</button>
+                                <button id="btn-keep-going" class="btn btn-secondary" type="button">继续挑战</button>
+                                <button id="btn-win-restart" class="btn btn-primary" type="button">新游戏</button>
                             </div>
                         </div>
                     </div>
@@ -126,37 +137,37 @@
             </main>
 
             <!-- 系统参数数据 -->
-            <section class="stats-deck">
+            <section class="stats-deck" aria-label="游戏统计">
                 <div class="stat-pill">
-                    <span class="label"><i class="fa-regular fa-clock"></i> UPTIME</span>
+                    <span class="label"><i class="fa-regular fa-clock" aria-hidden="true"></i> UPTIME</span>
                     <span id="stat-time" class="value">00:00</span>
                 </div>
                 <div class="stat-pill">
-                    <span class="label"><i class="fa-solid fa-code-merge"></i> CYCLES</span>
+                    <span class="label"><i class="fa-solid fa-code-merge" aria-hidden="true"></i> CYCLES</span>
                     <span id="stat-moves" class="value">0</span>
                 </div>
                 <div class="stat-pill">
-                    <span class="label"><i class="fa-solid fa-bolt"></i> MAX TILE</span>
+                    <span class="label"><i class="fa-solid fa-bolt" aria-hidden="true"></i> MAX TILE</span>
                     <span id="stat-max-tile" class="value">0</span>
                 </div>
             </section>
 
             <!-- 操作按钮 -->
             <div class="action-deck">
-                <button id="btn-restart" class="btn btn-secondary flex-1">
-                    <i class="fa-solid fa-rotate-right"></i> Restart Grid
+                <button id="btn-restart" class="btn btn-secondary flex-1" type="button">
+                    <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Restart Grid
                 </button>
-                <button id="btn-undo" class="btn btn-secondary flex-1" disabled>
-                    <i class="fa-solid fa-arrow-rotate-left"></i> Undo Step
+                <button id="btn-undo" class="btn btn-secondary flex-1" type="button" disabled>
+                    <i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i> Undo Step
                 </button>
             </div>
         </div>
 
         <!-- 右侧账本区（包含成就与日志） -->
-        <div id="drawer-panel" class="drawer">
+        <aside id="drawer-panel" class="drawer" aria-label="成就与活动日志">
             <div class="drawer-header">
-                <h3><i class="fa-solid fa-award"></i> System Ledger</h3>
-                <button id="btn-drawer-close" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+                <h3><i class="fa-solid fa-award" aria-hidden="true"></i> System Ledger</h3>
+                <button id="btn-drawer-close" class="close-btn" type="button" aria-label="关闭成就与日志"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
             
             <div class="drawer-content">
@@ -165,19 +176,19 @@
                     <h4 class="subtitle">ACHIEVEMENTS</h4>
                     <div class="milestones-grid">
                         <div id="achieve-first" class="milestone-card locked">
-                            <i class="fa-solid fa-square-plus"></i>
+                            <i class="fa-solid fa-square-plus" aria-hidden="true"></i>
                             <span class="name">First Spark</span>
                         </div>
                         <div id="achieve-64" class="milestone-card locked">
-                            <i class="fa-solid fa-heart"></i>
+                            <i class="fa-solid fa-heart" aria-hidden="true"></i>
                             <span class="name">Deca Merge</span>
                         </div>
                         <div id="achieve-512" class="milestone-card locked">
-                            <i class="fa-solid fa-compass"></i>
+                            <i class="fa-solid fa-compass" aria-hidden="true"></i>
                             <span class="name">Matrix Elite</span>
                         </div>
                         <div id="achieve-2048" class="milestone-card locked">
-                            <i class="fa-solid fa-crown"></i>
+                            <i class="fa-solid fa-crown" aria-hidden="true"></i>
                             <span class="name">Zen Master</span>
                         </div>
                     </div>
@@ -186,17 +197,18 @@
                 <!-- 实时日志区域 -->
                 <div class="drawer-section log-section">
                     <h4 class="subtitle">ACTIVITY STREAM</h4>
-                    <div id="synthesis-ledger" class="console-box">
+                    <div id="synthesis-ledger" class="console-box" aria-live="polite" aria-relevant="additions">
                         <div class="console-line init">[SYSTEM] Neural interface ready.</div>
                     </div>
                 </div>
             </div>
-        </div>
+        </aside>
     </div>
 
     <!-- 背景遮罩层，仅移动端抽屉激活时显示 -->
-    <div id="drawer-backdrop" class="drawer-backdrop"></div>
+    <div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true"></div>
 
     <script src="script.js?v=30"></script>
+    <script src="optimizations.js?v=1"></script>
 </body>
 </html>
